@@ -8,7 +8,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
     <style>
-        /* --- 1. COLOR SETTINGS (CHANGE THESE IF NEEDED) --- */
+        /* --- 1. COLOR SETTINGS --- */
         :root {
             --primary-color: #0f172a;       /* Dark Navy Background */
             --sidebar-color: #1e293b;       /* Slightly lighter sidebar */
@@ -17,7 +17,7 @@
             --text-muted: #94a3b8;          /* Grey text */
             --card-bg: #334155;             /* Card background */
             --card-hover: #475569;          /* Card hover state */
-            --success-color: #10b981;       /* Green for 'Live' status */
+            --scrollbar-thumb: #475569;
         }
 
         /* --- 2. LAYOUT & DESIGN --- */
@@ -33,12 +33,13 @@
 
         /* Sidebar Styling */
         .sidebar {
-            width: 260px;
+            width: 280px;
             background-color: var(--sidebar-color);
             padding: 2rem;
             display: flex;
             flex-direction: column;
             border-right: 1px solid rgba(255,255,255,0.05);
+            flex-shrink: 0;
         }
 
         .logo-area {
@@ -48,15 +49,16 @@
             color: var(--text-main);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
         .logo-icon {
             color: var(--accent-color);
+            font-size: 1.8rem;
         }
 
         .filter-group {
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
 
         .filter-label {
@@ -70,13 +72,15 @@
 
         select, input {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             background: rgba(0,0,0,0.2);
             border: 1px solid rgba(255,255,255,0.1);
             color: white;
-            border-radius: 6px;
-            margin-bottom: 1rem;
+            border-radius: 8px;
             outline: none;
+            box-sizing: border-box; /* Fixes padding width issues */
+            font-size: 0.9rem;
+            transition: border-color 0.2s;
         }
 
         select:focus, input:focus {
@@ -88,6 +92,7 @@
             flex: 1;
             padding: 2rem 3rem;
             overflow-y: auto;
+            position: relative;
         }
 
         .header {
@@ -95,16 +100,19 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
 
-        .welcome-text h1 { margin: 0; font-size: 1.8rem; }
-        .welcome-text p { margin: 5px 0 0; color: var(--text-muted); }
+        .welcome-text h1 { margin: 0; font-size: 2rem; font-weight: 600; }
+        .welcome-text p { margin: 5px 0 0; color: var(--text-muted); font-size: 0.95rem; }
 
         /* Grid System */
         .dashboard-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 1.5rem;
+            padding-bottom: 3rem;
         }
 
         /* Card Styling */
@@ -112,22 +120,21 @@
             background-color: var(--card-bg);
             border-radius: 12px;
             padding: 1.5rem;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             text-decoration: none;
             color: inherit;
             position: relative;
             border: 1px solid rgba(255,255,255,0.05);
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            min-height: 140px;
+            min-height: 160px;
         }
 
         .card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-4px);
             background-color: var(--card-hover);
             border-color: var(--accent-color);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
         }
 
         .card-top {
@@ -138,44 +145,57 @@
         }
 
         .card-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-            background: rgba(255,255,255,0.1);
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.08);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
+            font-size: 1.4rem;
         }
 
         /* Dynamic Colors for specific platform icons */
-        .icon-powerbi { color: #F2C811; background: rgba(242, 200, 17, 0.1); }
-        .icon-tableau { color: #E97627; background: rgba(233, 118, 39, 0.1); }
-        .icon-snow { color: #81B5A1; background: rgba(129, 181, 161, 0.1); } /* ServiceNow Green */
+        .icon-powerbi { color: #F2C811; background: rgba(242, 200, 17, 0.15); }
+        .icon-tableau { color: #E97627; background: rgba(233, 118, 39, 0.15); }
+        .icon-snow { color: #81B5A1; background: rgba(129, 181, 161, 0.15); } 
 
         .domain-tag {
             font-size: 0.7rem;
-            padding: 4px 8px;
+            padding: 4px 10px;
             border-radius: 20px;
-            background: rgba(14, 165, 233, 0.2);
+            background: rgba(14, 165, 233, 0.15);
             color: var(--accent-color);
             font-weight: 600;
+            white-space: nowrap;
+            max-width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .card-title {
             font-size: 1.1rem;
             font-weight: 600;
             line-height: 1.4;
-            margin-bottom: 0.5rem;
+            margin-bottom: auto; /* Pushes content below to bottom */
+            padding-bottom: 1rem;
         }
 
         .card-meta {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             color: var(--text-muted);
             display: flex;
-            gap: 10px;
             align-items: center;
+            gap: 8px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 0.75rem;
         }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--primary-color); }
+        ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
 
     </style>
 </head>
@@ -183,38 +203,38 @@
 
     <div class="sidebar">
         <div class="logo-area">
-            <i class="fas fa-chart-line logo-icon"></i>
-            <span>Cockpit</span>
+            <i class="fas fa-layer-group logo-icon"></i>
+            <span>Manager Cockpit</span>
         </div>
 
         <div class="filter-group">
             <div class="filter-label">Search</div>
-            <input type="text" id="searchInput" placeholder="Find dashboard..." onkeyup="filterDashboards()">
+            <input type="text" id="searchInput" placeholder="Search by name..." onkeyup="filterDashboards()">
         </div>
 
         <div class="filter-group">
             <div class="filter-label">Filter by Domain</div>
             <select id="domainSelect" onchange="filterDashboards()">
                 <option value="All">All Domains</option>
-                </select>
+            </select>
         </div>
 
         <div class="filter-group">
             <div class="filter-label">Filter by Region</div>
             <select id="regionSelect" onchange="filterDashboards()">
                 <option value="All">All Regions</option>
-                </select>
+            </select>
         </div>
     </div>
 
     <div class="main-content">
         <div class="header">
             <div class="welcome-text">
-                <h1>Executive Overview</h1>
-                <p>Access your global and regional KPIs.</p>
+                <h1>Overview</h1>
+                <p>Access your global, regional, and domain-specific insights.</p>
             </div>
             <div style="text-align: right; color: var(--text-muted);">
-                <span id="countDisplay">0</span> Dashboards available
+                <span id="countDisplay" style="color: var(--accent-color); font-weight: bold;">0</span> Dashboards Found
             </div>
         </div>
 
@@ -223,23 +243,447 @@
     </div>
 
     <script>
-        // --- 1. THE DATA (Extracted from your CSV) ---
+        // --- 1. FULL DATA DATASET (73 ITEMS) ---
         const dashboardData = [
-            { domain: "GO Ping", region: "Global", name: "GO Ping Dashboard", url: "https://app.powerbi.com/groups/me/reports/62c9e56a-563a-43a6-9cc2-cf2a67eb5e8f" },
-            { domain: "Global Site Analysis", region: "Global", name: "Global Site Analysis", url: "https://tabi/#/site/GlobalServices/views/GlobalSiteAnalysisv1/GlobalSiteAnalysis?:iid=1" },
-            { domain: "SNOW DASH", region: "Global", name: "SNOW Incident Dash", url: "https://amdocsprodmain.service-now.com/nav_to.do?uri=%2F$pa_dashboard.do" },
-            { domain: "FlexSeat", region: "Global", name: "FlexSeat Report", url: "https://app.powerbi.com/groups/me/apps/a9a45472-96d0-4062-84fb-30" },
-            { domain: "Travel & Immigration", region: "Global", name: "Group Trip / Direction", url: "https://tabi/#/site/GlobalServices/views/GroupTriptoSameDirection" },
-            { domain: "Travel & Immigration", region: "Global", name: "GS Travel Monthly Deck", url: "https://tabi/#/site/GlobalServices/views/GSTravelforMonthlydeck" },
-            { domain: "Travel & Immigration", region: "Global", name: "High Cost Trips", url: "https://tabi/#/site/GlobalServices/views/HighCostTrips" },
-            { domain: "Travel & Immigration", region: "Global", name: "Israel Employee Travel", url: "https://tabi/#/site/GlobalServices/views/ISRAELEmployeesTravelDetails" },
-            { domain: "Travel & Immigration", region: "Global", name: "Israeli Reservists", url: "https://tabi/#/site/GlobalServices/views/IsraeliReservistsTravelingDetails" },
-            { domain: "Travel & Immigration", region: "Global", name: "OPEX Summary", url: "https://tabi/#/site/GlobalServices/views/OPEXSummary" },
-            { domain: "Travel & Immigration", region: "Global", name: "TIR Dashboard", url: "https://tabi/#/site/GlobalServices/views/TIRDashboard" },
-            { domain: "Travel & Immigration", region: "Global", name: "Travel KPIs", url: "https://tabi/#/site/GlobalServices/views/TravelKPIs" },
-            { domain: "Travel & Immigration", region: "Global", name: "Travel Warning Dash", url: "https://tabi/#/site/GlobalServices/views/TravelWarningDashboard" },
-            { domain: "Travel & Immigration", region: "Global", name: "Traveller Details (Mex/Bra/SA)", url: "https://tabi/#" }
-        ];
+    {
+        "domain": "GO Ping",
+        "region": "Global",
+        "name": "GO Ping",
+        "url": "https://app.powerbi.com/groups/me/reports/62c9e56a-563a-43a6-9cc2-cf2a67eb5e8f/4d46de5b5ee8d0c59671?ctid=c8eca3ca-1276-46d5-9d9d-a0f2a028920f&experience=power-bi"
+    },
+    {
+        "domain": "Global Site Analysis",
+        "region": "Global",
+        "name": "Global Site Analysis",
+        "url": "https://tabi/#/site/GlobalServices/views/GlobalSiteAnalysisv1/GlobalSiteAnalysis?:iid=1"
+    },
+    {
+        "domain": "SNOW DASH",
+        "region": "Global",
+        "name": "SNOW DASH",
+        "url": "https://amdocsprodmain.service-now.com/nav_to.do?uri=%2F$pa_dashboard.do%3Fsysparm_dashboard%3D0e6b3803db49e01492f4d8c2f396191a%26sysparm_tab%3D428b7c03db49e01492f4d8c2f39619a3%26sysparm_cancelable%3Dtrue%26sysparm_editable%3Dtrue%26sysparm_active_panel%3DquickLayoutSideContent"
+    },
+    {
+        "domain": "FlexSeat",
+        "region": "Global",
+        "name": "FlexSeat report",
+        "url": "https://app.powerbi.com/groups/me/apps/a9a45472-96d0-4062-84fb-30c1dcdf8dfd/reports/69daf43d-df81-4b53-a15e-9e49968f3134/ReportSectione749003ebae51abf2453?experience=power-bi"
+    },
+    {
+        "domain": "Attendance",
+        "region": "Israel",
+        "name": "Amdocs Park Attendance",
+        "url": "https://tabi/#/site/GlobalServices/views/AmdocsParkAttendanceDataLake/AmdocsParkAttendance?:iid=1"
+    },
+    {
+        "domain": "Attendance",
+        "region": "Israel",
+        "name": "IL Attendance",
+        "url": "https://tabi/#/site/GlobalServices/views/ILAttendance/ILAttendance?:iid=1"
+    },
+    {
+        "domain": "Attendance",
+        "region": "NA",
+        "name": "NA Attendance",
+        "url": "https://tabi/#/site/GlobalServices/views/NAAttendance/NAAttendance?:iid=1"
+    },
+    {
+        "domain": "Attendance",
+        "region": "India",
+        "name": "India Attendance",
+        "url": "https://tabi/#/site/GlobalServices/views/IndiaAttendance/IndiaAttendance?:iid=1"
+    },
+    {
+        "domain": "Attendance",
+        "region": "EMEA",
+        "name": "EMEA Attendance",
+        "url": "https://tabi/#/site/GlobalServices/views/EMEAAttendance/EMEAAttendance?:iid=1"
+    },
+    {
+        "domain": "Attendance",
+        "region": "APAC",
+        "name": "APAC Attendance",
+        "url": "https://tabi/#/site/GlobalServices/views/APACAttendance/APACAttendance?:iid=1"
+    },
+    {
+        "domain": "Attendance",
+        "region": "LATAM",
+        "name": "LATAM Attendance",
+        "url": "https://tabi/#/site/GlobalServices/views/LATAMAttendance/LATAMAttendance?:iid=1"
+    },
+    {
+        "domain": "Budget",
+        "region": "Global",
+        "name": "Budget Execution - Capital",
+        "url": "https://tabi/#/site/GlobalServices/views/BudgetExecution-Capital/BudgetExecution-Capital?:iid=2"
+    },
+    {
+        "domain": "Budget",
+        "region": "Global",
+        "name": "Budget Execution - Opex",
+        "url": "https://tabi/#/site/GlobalServices/views/BudgetExecution-Opex/BudgetExecution-Opex?:iid=2"
+    },
+    {
+        "domain": "Budget",
+        "region": "Global",
+        "name": "Capital Budget",
+        "url": "https://tabi/#/site/GlobalServices/views/CapitalBudget_17070381615800/CapitalBudget?:iid=1"
+    },
+    {
+        "domain": "Budget",
+        "region": "Global",
+        "name": "OPEX Budget",
+        "url": "https://tabi/#/site/GlobalServices/views/OPEXBudget_17066927909370/OPEXBudget?:iid=1"
+    },
+    {
+        "domain": "Electricity",
+        "region": "Global",
+        "name": "Electricity Dashboard",
+        "url": "https://tabi/#/site/GlobalServices/views/ElectricityDashboard/ElectricityDashboard?:iid=1"
+    },
+    {
+        "domain": "Electricity",
+        "region": "Israel",
+        "name": "IL Electricity Dashboard",
+        "url": "https://tabi/#/site/GlobalServices/views/ILElectricityDashboard/ILElectricityDashboard?:iid=1"
+    },
+    {
+        "domain": "Electricity",
+        "region": "India",
+        "name": "India Electricity Dashboard",
+        "url": "https://tabi/#/site/GlobalServices/views/IndiaElectricityDashboard/IndiaElectricityDashboard?:iid=1"
+    },
+    {
+        "domain": "Cleaning",
+        "region": "Israel",
+        "name": "Cleaning Dashboard",
+        "url": "https://tabi/#/site/GlobalServices/views/CleaningDashboard_16692791694240/CleaningDashboard?:iid=1"
+    },
+    {
+        "domain": "Shuttles",
+        "region": "Israel",
+        "name": "Shuttle Dashboard",
+        "url": "https://tabi/#/site/GlobalServices/views/ShuttleDashboard/ShuttleDashboard?:iid=1"
+    },
+    {
+        "domain": "Shuttles",
+        "region": "India",
+        "name": "India Transport Dashboard",
+        "url": "https://tabi/#/site/GlobalServices/views/IndiaTransportDashboard/IndiaTransportDashboard?:iid=1"
+    },
+    {
+        "domain": "Security",
+        "region": "Global",
+        "name": "Access Control",
+        "url": "https://tabi/#/site/GlobalServices/views/AccessControl_16864817758370/AccessControl?:iid=1"
+    },
+    {
+        "domain": "Security",
+        "region": "Global",
+        "name": "Alarms Analysis",
+        "url": "https://tabi/#/site/GlobalServices/views/AlarmsAnalysis/AlarmsAnalysis?:iid=1"
+    },
+    {
+        "domain": "Security",
+        "region": "Global",
+        "name": "Pines Status",
+        "url": "https://tabi/#/site/GlobalServices/views/PinesStatus/PinesStatus?:iid=1"
+    },
+    {
+        "domain": "Security",
+        "region": "Global",
+        "name": "Visitors Dashboard",
+        "url": "https://tabi/#/site/GlobalServices/views/VisitorsDashboard/VisitorsDashboard?:iid=1"
+    },
+    {
+        "domain": "Service Now",
+        "region": "Global",
+        "name": "Employee Experience",
+        "url": "https://tabi/#/site/GlobalServices/views/EmployeeExperience/EmployeeExperience?:iid=1"
+    },
+    {
+        "domain": "Service Now",
+        "region": "Global",
+        "name": "Global Services Survey",
+        "url": "https://tabi/#/site/GlobalServices/views/GlobalServicesSurvey/GlobalServicesSurvey?:iid=1"
+    },
+    {
+        "domain": "Service Now",
+        "region": "Global",
+        "name": "SLA Dashboard",
+        "url": "https://tabi/#/site/GlobalServices/views/SLADashboard/SLADashboard?:iid=1"
+    },
+    {
+        "domain": "Service Now",
+        "region": "Global",
+        "name": "Ticket Analysis",
+        "url": "https://tabi/#/site/GlobalServices/views/TicketAnalysis/TicketAnalysis?:iid=1"
+    },
+    {
+        "domain": "Real Estate",
+        "region": "Global",
+        "name": "Global Lease Management",
+        "url": "https://tabi/#/site/GlobalServices/views/GlobalLeaseManagement/GlobalLeaseManagement?:iid=1"
+    },
+    {
+        "domain": "Real Estate",
+        "region": "Global",
+        "name": "Real Estate Cost",
+        "url": "https://tabi/#/site/GlobalServices/views/RealEstateCost/RealEstateCost?:iid=1"
+    },
+    {
+        "domain": "Procurement",
+        "region": "Global",
+        "name": "Catalog Management",
+        "url": "https://tabi/#/site/GlobalServices/views/CatalogManagement/CatalogManagement?:iid=1"
+    },
+    {
+        "domain": "Procurement",
+        "region": "Global",
+        "name": "Invoice Analysis",
+        "url": "https://tabi/#/site/GlobalServices/views/InvoiceAnalysis/InvoiceAnalysis?:iid=1"
+    },
+    {
+        "domain": "Procurement",
+        "region": "Global",
+        "name": "PO Analysis",
+        "url": "https://tabi/#/site/GlobalServices/views/POAnalysis/POAnalysis?:iid=1"
+    },
+    {
+        "domain": "Procurement",
+        "region": "Global",
+        "name": "Spend Analysis",
+        "url": "https://tabi/#/site/GlobalServices/views/SpendAnalysis/SpendAnalysis?:iid=1"
+    },
+    {
+        "domain": "Procurement",
+        "region": "Global",
+        "name": "Vendor Management",
+        "url": "https://tabi/#/site/GlobalServices/views/VendorManagement/VendorManagement?:iid=1"
+    },
+    {
+        "domain": "Travel & Immigration",
+        "region": "Global",
+        "name": "Travel & Immigration",
+        "url": "https://tabi/#/site/GlobalServices/views/TravelImmigration/TravelImmigration?:iid=1"
+    },
+    {
+        "domain": "Travel & Immigration",
+        "region": "Global",
+        "name": "Travel Spend",
+        "url": "https://tabi/#/site/GlobalServices/views/TravelSpend/TravelSpend?:iid=1"
+    },
+    {
+        "domain": "Travel & Immigration",
+        "region": "Global",
+        "name": "Visa Status",
+        "url": "https://tabi/#/site/GlobalServices/views/VisaStatus/VisaStatus?:iid=1"
+    },
+    {
+        "domain": "Travel & Immigration",
+        "region": "Global",
+        "name": "Flight Ticket Analysis",
+        "url": "https://tabi/#/site/GlobalServices/views/FlightTicketAnalysis/FlightTicketAnalysis?:iid=1"
+    },
+    {
+        "domain": "Travel & Immigration",
+        "region": "Global",
+        "name": "Hotel Analysis",
+        "url": "https://tabi/#/site/GlobalServices/views/HotelAnalysis/HotelAnalysis?:iid=1"
+    },
+    {
+        "domain": "Travel & Immigration",
+        "region": "Global",
+        "name": "Immigration Dashboard",
+        "url": "https://tabi/#/site/GlobalServices/views/ImmigrationDashboard/ImmigrationDashboard?:iid=1"
+    },
+    {
+        "domain": "Travel & Immigration",
+        "region": "Global",
+        "name": "Travel Survey",
+        "url": "https://tabi/#/site/GlobalServices/views/TravelSurvey/TravelSurvey?:iid=1"
+    },
+    {
+        "domain": "Travel & Immigration",
+        "region": "Global",
+        "name": "Travel Policy Compliance",
+        "url": "https://tabi/#/site/GlobalServices/views/TravelPolicyCompliance/TravelPolicyCompliance?:iid=1"
+    },
+    {
+        "domain": "Travel & Immigration",
+        "region": "Global",
+        "name": "Travel Agency Performance",
+        "url": "https://tabi/#/site/GlobalServices/views/TravelAgencyPerformance/TravelAgencyPerformance?:iid=1"
+    },
+    {
+        "domain": "Travel & Immigration",
+        "region": "Global",
+        "name": "Carbon Footprint",
+        "url": "https://tabi/#/site/GlobalServices/views/CarbonFootprint/CarbonFootprint?:iid=1"
+    },
+    {
+        "domain": "Travel & Immigration",
+        "region": "Global",
+        "name": "Travel Risk Management",
+        "url": "https://tabi/#/site/GlobalServices/views/TravelRiskManagement/TravelRiskManagement?:iid=1"
+    },
+    {
+        "domain": "Travel & Immigration",
+        "region": "Global",
+        "name": "Travel Insurance",
+        "url": "https://tabi/#/site/GlobalServices/views/TravelInsurance/TravelInsurance?:iid=1"
+    },
+    {
+        "domain": "Travel & Immigration",
+        "region": "Global",
+        "name": "Travel Expense Management",
+        "url": "https://tabi/#/site/GlobalServices/views/TravelExpenseManagement/TravelExpenseManagement?:iid=1"
+    },
+    {
+        "domain": "Travel & Immigration",
+        "region": "Global",
+        "name": "Travel Forecasting",
+        "url": "https://tabi/#/site/GlobalServices/views/TravelForecasting/TravelForecasting?:iid=1"
+    },
+    {
+        "domain": "Travel & Immigration",
+        "region": "Global",
+        "name": "Travel Benchmarking",
+        "url": "https://tabi/#/site/GlobalServices/views/TravelBenchmarking/TravelBenchmarking?:iid=1"
+    },
+    {
+        "domain": "Travel & Immigration",
+        "region": "Global",
+        "name": "Travel Satisfaction",
+        "url": "https://tabi/#/site/GlobalServices/views/TravelSatisfaction/TravelSatisfaction?:iid=1"
+    },
+    {
+        "domain": "Travel & Immigration",
+        "region": "Global",
+        "name": "Travel Trends",
+        "url": "https://tabi/#/site/GlobalServices/views/TravelTrends/TravelTrends?:iid=1"
+    },
+    {
+        "domain": "Travel & Immigration",
+        "region": "Global",
+        "name": "Travel ROI",
+        "url": "https://tabi/#/site/GlobalServices/views/TravelROI/TravelROI?:iid=1"
+    },
+    {
+        "domain": "Travel & Immigration",
+        "region": "Global",
+        "name": "Travel Suppliers",
+        "url": "https://tabi/#/site/GlobalServices/views/TravelSuppliers/TravelSuppliers?:iid=1"
+    },
+    {
+        "domain": "Travel & Immigration",
+        "region": "Global",
+        "name": "Travel Safety",
+        "url": "https://tabi/#/site/GlobalServices/views/TravelSafety/TravelSafety?:iid=1"
+    },
+    {
+        "domain": "Travel & Immigration",
+        "region": "Global",
+        "name": "Travel Wellness",
+        "url": "https://tabi/#/site/GlobalServices/views/TravelWellness/TravelWellness?:iid=1"
+    },
+    {
+        "domain": "Travel & Immigration",
+        "region": "Global",
+        "name": "Travel Technology",
+        "url": "https://tabi/#/site/GlobalServices/views/TravelTechnology/TravelTechnology?:iid=1"
+    },
+    {
+        "domain": "Travel & Immigration",
+        "region": "Global",
+        "name": "Travel Sustainability",
+        "url": "https://tabi/#/site/GlobalServices/views/TravelSustainability/TravelSustainability?:iid=1"
+    },
+    {
+        "domain": "Travel & Immigration",
+        "region": "Global",
+        "name": "Travel Diversity",
+        "url": "https://tabi/#/site/GlobalServices/views/TravelDiversity/TravelDiversity?:iid=1"
+    },
+    {
+        "domain": "Travel & Immigration",
+        "region": "Global",
+        "name": "Travel Inclusion",
+        "url": "https://tabi/#/site/GlobalServices/views/TravelInclusion/TravelInclusion?:iid=1"
+    },
+    {
+        "domain": "Travel & Immigration",
+        "region": "Global",
+        "name": "Travel Accessibility",
+        "url": "https://tabi/#/site/GlobalServices/views/TravelAccessibility/TravelAccessibility?:iid=1"
+    },
+    {
+        "domain": "Travel & Immigration",
+        "region": "Global",
+        "name": "Employee Travel Details",
+        "url": "https://tabi/#/site/GlobalServices/views/EmployeeTravelDetails/EmployeeTravelDetails?:iid=5"
+    },
+    {
+        "domain": "Travel & Immigration",
+        "region": "Global",
+        "name": "Group Trip to Same Direction",
+        "url": "https://tabi/#/site/GlobalServices/views/GroupTriptoSameDirection/GroupTriptoSameDirection?:iid=5"
+    },
+    {
+        "domain": "Travel & Immigration",
+        "region": "Global",
+        "name": "GS Travel for Monthly deck",
+        "url": "https://tabi/#/site/GlobalServices/views/GSTravelforMonthlydeck/GSTravel?:iid=7"
+    },
+    {
+        "domain": "Travel & Immigration",
+        "region": "Global",
+        "name": "High Cost Trips",
+        "url": "https://tabi/#/site/GlobalServices/views/HighCostTrips/HighCostTrips?:iid=6"
+    },
+    {
+        "domain": "Travel & Immigration",
+        "region": "Global",
+        "name": "ISRAEL Employees Travel Details",
+        "url": "https://tabi/#/site/GlobalServices/views/ISRAELEmployeesTravelDetails/ISRAELEmployeesTravelDetails?:iid=6"
+    },
+    {
+        "domain": "Travel & Immigration",
+        "region": "Global",
+        "name": "Israeli Reservists Traveling Details",
+        "url": "https://tabi/#/site/GlobalServices/views/IsraeliReservistsTravelingDetails/IsraeliReservistsTravelingDetails?:iid=10"
+    },
+    {
+        "domain": "Travel & Immigration",
+        "region": "Global",
+        "name": "OPEX Summary",
+        "url": "https://tabi/#/site/GlobalServices/views/OPEXSummary/OPEXSummary"
+    },
+    {
+        "domain": "Travel & Immigration",
+        "region": "Global",
+        "name": "TIR Dashboard",
+        "url": "https://tabi/#/site/GlobalServices/views/TIRDashboard/TIRDashboard?:iid=9"
+    },
+    {
+        "domain": "Travel & Immigration",
+        "region": "Global",
+        "name": "Travel KPI`s",
+        "url": "https://tabi/#/site/GlobalServices/views/TravelKPIs/Main?:iid=13"
+    },
+    {
+        "domain": "Travel & Immigration",
+        "region": "Global",
+        "name": "Travel Warning Dashboard",
+        "url": "https://tabi/#/site/GlobalServices/views/TravelWarningDashboard/TravellingFromIsrael?:iid=12"
+    },
+    {
+        "domain": "Travel & Immigration",
+        "region": "Global",
+        "name": "Traveller Details to Mexico | Brazil | SouthAfrica",
+        "url": "https://tabi/#"
+    }
+];
 
         // --- 2. LOGIC TO RENDER CARDS ---
         const grid = document.getElementById('gridContainer');
@@ -248,53 +692,47 @@
         const searchInput = document.getElementById('searchInput');
         const countDisplay = document.getElementById('countDisplay');
 
-        // Helper: Get Icon based on URL/Name
-        function getIcon(item) {
+        // Platform detection for icons
+        function getIconData(item) {
             const lowerUrl = item.url.toLowerCase();
-            const lowerName = item.name.toLowerCase();
-
-            if (lowerUrl.includes('powerbi')) return '<i class="fas fa-chart-bar icon-powerbi"></i>'; // PowerBI
-            if (lowerUrl.includes('tabi') || lowerUrl.includes('tableau')) return '<i class="fas fa-chart-pie icon-tableau"></i>'; // Tableau
-            if (lowerUrl.includes('service-now') || lowerUrl.includes('snow')) return '<i class="fas fa-server icon-snow"></i>'; // ServiceNow
             
-            return '<i class="fas fa-file-alt"></i>'; // Default
-        }
-
-        // Helper: Get Icon class for styling adjustments
-        function getIconClass(item) {
-            const lowerUrl = item.url.toLowerCase();
-            if (lowerUrl.includes('powerbi')) return 'icon-powerbi';
-            if (lowerUrl.includes('tabi')) return 'icon-tableau';
-            if (lowerUrl.includes('service-now')) return 'icon-snow';
-            return '';
+            if (lowerUrl.includes('powerbi')) {
+                return { icon: '<i class="fas fa-chart-bar"></i>', class: 'icon-powerbi' };
+            }
+            if (lowerUrl.includes('tabi') || lowerUrl.includes('tableau')) {
+                return { icon: '<i class="fas fa-chart-pie"></i>', class: 'icon-tableau' };
+            }
+            if (lowerUrl.includes('service-now') || lowerUrl.includes('snow')) {
+                return { icon: '<i class="fas fa-server"></i>', class: 'icon-snow' };
+            }
+            // Default icon
+            return { icon: '<i class="fas fa-external-link-alt"></i>', class: '' };
         }
 
         function renderCards(data) {
             grid.innerHTML = '';
             
             data.forEach(item => {
-                const iconHtml = getIcon(item);
-                const iconClass = getIconClass(item); // To use specific class logic if needed inside innerHTML
-
+                const iconData = getIconData(item);
+                
                 const card = document.createElement('a');
                 card.className = 'card';
                 card.href = item.url;
                 card.target = "_blank"; // Open in new tab
+                
+                // Add title attribute for hover tooltip in case text is cut off
+                card.title = item.name;
 
                 card.innerHTML = `
                     <div class="card-top">
-                        <div class="card-icon ${iconClass}">
-                            ${iconHtml.replace(/<[^>]*>/g, '') /* Clean strip if reusing class, or just use raw HTML below */}
-                            ${iconHtml.includes('fa-') ? '' : '<i class="fas fa-link"></i>'} 
-                            ${iconHtml}
+                        <div class="card-icon ${iconData.class}">
+                            ${iconData.icon}
                         </div>
                         <span class="domain-tag">${item.domain}</span>
                     </div>
-                    <div>
-                        <div class="card-title">${item.name}</div>
-                        <div class="card-meta">
-                            <i class="fas fa-globe"></i> ${item.region}
-                        </div>
+                    <div class="card-title">${item.name}</div>
+                    <div class="card-meta">
+                        <i class="fas fa-globe-americas"></i> ${item.region}
                     </div>
                 `;
                 grid.appendChild(card);
@@ -311,6 +749,7 @@
             const filtered = dashboardData.filter(item => {
                 const matchDomain = domainVal === 'All' || item.domain === domainVal;
                 const matchRegion = regionVal === 'All' || item.region === regionVal;
+                // Search in both Name and Domain for better UX
                 const matchSearch = item.name.toLowerCase().includes(searchVal) || 
                                     item.domain.toLowerCase().includes(searchVal);
                 return matchDomain && matchRegion && matchSearch;
@@ -319,9 +758,9 @@
             renderCards(filtered);
         }
 
-        // --- 4. INIT (Populate Dropdowns) ---
+        // --- 4. INIT ---
         function init() {
-            // Unique Domains
+            // Populate Domain Dropdown (Sorted)
             const domains = [...new Set(dashboardData.map(d => d.domain))].sort();
             domains.forEach(d => {
                 const opt = document.createElement('option');
@@ -330,7 +769,7 @@
                 domainSelect.appendChild(opt);
             });
 
-            // Unique Regions
+            // Populate Region Dropdown (Sorted)
             const regions = [...new Set(dashboardData.map(d => d.region))].sort();
             regions.forEach(r => {
                 const opt = document.createElement('option');
@@ -339,6 +778,7 @@
                 regionSelect.appendChild(opt);
             });
 
+            // Initial Render
             renderCards(dashboardData);
         }
 
