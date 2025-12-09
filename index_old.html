@@ -1,0 +1,462 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Managers – Reports & Dashboards</title>
+  <style>
+    :root {
+      /* Brand palette */
+      --brand-magenta: #E00065;
+      --brand-orange: #FF8A00;   /* used for credit color */
+      --brand-plum:   #5E2B97;
+      --brand-dark:   #000000;
+      --brand-gray:   #D9DBE2;
+      --text:         #FFFFFF;
+      --muted:        var(--brand-gray);
+      --shadow:       0 10px 24px rgba(0,0,0,.35);
+      --overlay-alpha: 0.5;  /* controlled by the dimmer slider */
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      color: var(--text);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial;
+      background-color: var(--brand-dark);
+      /* Lightweight background; swap to an image if you prefer */
+      background-image:
+        radial-gradient(1200px 800px at 20% 10%, rgba(224,0,101,.12), transparent 70%),
+        radial-gradient(800px 600px at 80% 60%, rgba(255,138,0,.10), transparent 60%),
+        linear-gradient(180deg, #0a0a0a, #000);
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+
+    /* Film overlay for readability (alpha controlled by slider) */
+    body::before {
+      content: "";
+      position: fixed; inset: 0; z-index: 0;
+      background: linear-gradient(
+        135deg,
+        rgba(224,0,101,var(--overlay-alpha)),
+        rgba(255,138,0,calc(max(var(--overlay-alpha) - .2, 0))),
+        rgba(0,0,0,calc(min(var(--overlay-alpha) + .15, 1)))
+      );
+      pointer-events: none;
+    }
+
+    .page { position: relative; z-index: 1; }
+
+    header {
+      position: sticky; top: 0; z-index: 5;
+      background: linear-gradient(180deg, rgba(0,0,0,.82), rgba(0,0,0,.6));
+      backdrop-filter: blur(8px) saturate(1.2);
+      border-bottom: 1px solid var(--brand-gray);
+    }
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 16px; }
+    .title { display: flex; align-items: center; gap: 12px; }
+    .title h1 { margin: 0; font-size: 20px; letter-spacing: .2px; }
+
+    .filters {
+      display: grid; grid-template-columns: 1fr 140px 180px 140px;
+      gap: 10px; margin-top: 12px;
+    }
+    .filters input[type="search"], .filters select, .chipbar {
+      background: rgba(0,0,0,0.75); color: var(--text);
+      border: 1px solid var(--brand-gray); border-radius: 10px;
+      padding: 10px 12px; box-shadow: var(--shadow);
+    }
+
+    .chipbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .chip {
+      cursor: pointer; user-select: none; padding: 6px 10px; border-radius: 20px;
+      background: rgba(30,30,30,.85); border: 1px solid var(--brand-gray);
+      color: var(--muted); transition: .2s; backdrop-filter: blur(6px);
+    }
+    .chip.active { background: var(--brand-plum); color: #fff; }
+
+    main { padding: 24px 16px; }
+    .section { margin: 18px auto; max-width: 1200px; }
+    .section-header {
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+      background: rgba(0,0,0,0.75); border: 1px solid var(--brand-gray);
+      border-radius: 12px; padding: 10px 14px; box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+    .section-header h2 { margin: 0; font-size: 16px; }
+    .section-header button {
+      background: rgba(30,30,30,.85); color: var(--text);
+      border: 1px solid var(--brand-gray); border-radius: 8px;
+      padding: 8px 12px; cursor: pointer;
+    }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; margin-top: 12px; }
+    .grid[role="list"] .card[role="listitem"] { outline: none; }
+
+    .card {
+      background: rgba(0,0,0,0.68); border: 1px solid var(--brand-gray);
+      border-radius: 12px; padding: 12px; box-shadow: var(--shadow);
+      display: grid; grid-template-rows: auto auto auto; gap: 10px;
+      backdrop-filter: blur(8px);
+    }
+    .card:focus-visible { outline: 2px solid var(--brand-plum); outline-offset: 3px; }
+
+    .name { font-weight: 600; letter-spacing: .2px; }
+    .meta { display: flex; flex-wrap: wrap; gap: 8px; }
+    .badge {
+      font-size: 12px; padding: 4px 8px; border-radius: 14px;
+      border: 1px solid var(--brand-gray); color: var(--muted);
+      background: rgba(15,15,15,.85);
+    }
+    .actions { display: flex; gap: 8px; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(15,15,15,.9); color: var(--text);
+      border: 1px solid var(--brand-gray); border-radius: 8px;
+      padding: 8px 10px; text-decoration: none; cursor: pointer;
+    }
+    .btn.primary { background-image: linear-gradient(135deg, var(--brand-magenta), var(--brand-orange)); border-color: var(--brand-gray); }
+    .btn.copy    { background: linear-gradient(180deg, #244a32, #173b27); border-color: rgba(100, 211, 139, .5); }
+    .btn.fav     { background: #3a3042; }
+
+    footer {
+      color: var(--muted); text-align: center; padding: 22px;
+      backdrop-filter: blur(6px);
+    }
+    footer .ticket { display:inline-block; margin-left:8px; }
+    footer .ticket a { color: var(--brand-orange); text-decoration: none; font-weight: 600; }
+    footer .ticket a:hover, footer .ticket a:focus { text-decoration: underline; }
+
+    /* CREDIT: orange + bold */
+    footer .credit {
+      color: var(--brand-orange);   /* Orange */
+      font-weight: 700;             /* Bold  */
+      display: inline-block;
+      margin-left: 12px;
+    }
+
+    @media (max-width: 640px) {
+      .filters { grid-template-columns: 1fr; }
+      footer .credit { display: block; margin-left: 0; margin-top: 8px; }
+    }
+
+    /* Accessibility: background dimmer control block */
+    .dimmer { position: fixed; right: 16px; bottom: 16px; z-index: 3; }
+    .dimmer input { width: 220px; }
+    .dimmer label {
+      font-size: 12px; color: var(--muted); display:block; margin-bottom:6px;
+      background: rgba(0,0,0,.6); padding:6px 8px; border: 1px solid var(--brand-gray); border-radius: 8px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { transition: none !important; animation: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="wrap">
+        <div class="title">
+          <!-- Simple brand mark -->
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs>
+              <linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%"  stop-color="var(--brand-magenta)"/>
+                <stop offset="100%" stop-color="var(--brand-orange)"/>
+              </linearGradient>
+            </defs>
+            <path d="M12 3l9 4-9 4-9-4 9-4z" fill="url(#grad)"/>
+            <path d="M21 12l-9 4-9-4" stroke="url(#grad)" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+          <h1>Managers – Reports & Dashboards</h1>
+        </div>
+
+        <div class="filters" role="region" aria-label="Filters">
+          <input id="search" type="search" placeholder="Search by name, domain, or region…" aria-label="Search dashboards"/>
+          <select id="region" aria-label="Filter by region"><option value="">All regions</option></select>
+          <select id="sort" aria-label="Sort">
+            <option value="name">Sort: Name (A→Z)</option>
+            <option value="domain">Sort: Domain</option>
+            <option value="region">Sort: Region</option>
+          </select>
+          <button id="reset" class="btn" aria-label="Reset filters">Reset</button>
+        </div>
+
+        <div class="chipbar" id="domains" aria-label="Domain filters"></div>
+      </div>
+    </header>
+
+    <main>
+      <section class="section" id="quick-links">
+        <div class="section-header">
+          <h2>Quick links</h2>
+          <div style="display:flex; gap:8px; align-items:center; color:var(--muted)">Commonly used resources</div>
+        </div>
+        <div class="grid" id="quickGrid" role="list"></div>
+      </section>
+
+      <section class="section" id="favorites-section" hidden>
+        <div class="section-header">
+          <h2>⭐ Favorites</h2>
+          <button class="btn" id="openFavs">Open all favorites</button>
+        </div>
+        <div class="grid" id="favoritesGrid" role="list"></div>
+      </section>
+
+      <section class="section" id="results">
+        <div class="section-header">
+          <h2>All dashboards</h2>
+        <div style="display:flex; gap:8px; align-items:center">
+            <label style="display:flex; gap:6px; align-items:center; color:var(--muted)">
+              <input type="checkbox" id="showFavs"/> Show favorites first
+            </label>
+            <button class="btn" id="openFiltered">Open filtered</button>
+          </div>
+        </div>
+        <div class="grid" id="grid" role="list"></div>
+      </section>
+    </main>
+
+    <footer>
+      Built for managers · Simple · Fast · Self-serve · Last updated <span id="lastUpdated"></span>
+      <!-- CREDIT (orange, bold) -->
+      · <span class="credit" aria-label="Creator credit">Created by Nitzan Raich</span>
+      <span class="ticket">Need to open a ticket for GO BI team?
+        <a href="https://amdocsprodmain.service-now.com/one_portal?id=aop_sc_cat_item&sys_id=9a8c607287eaced01c4431d73cbb3526&category_sys_id=6f38d211877286904f7762480cbb HERE</a>
+      </span>
+    </footer>
+
+    <!-- Accessibility: background dimmer -->
+    <div class="dimmer">
+      <label for="dimRange">Background dimmer</label>
+      <input id="dimRange" type="range" min="0" max="100" value="50" />
+    </div>
+  </div>
+
+  <script>
+    /* -----------------------------
+       Data (replace with your full lists)
+       ----------------------------- */
+    let quickLinks = [
+      { name:'2026 Planned Projects (Monday.com)', url:'https://amdocscorp.monday.com/boards/1927278786/views/40027188' },
+      { name:'Flex set report (Power BI)',         url:'https://app.powerbi.com/groups/me/apps/a9a45472-96d0-4062-84fb-30c1dcdf8dfd/reports/69daf43d-df81-4b53-a15e-9e49968f3134/ReportSectione749003ebae51abf2453?experience=power-bi' },
+      { name:'SNOW DASH',                          url:'https://amdocsprodmain.service-now.com/nav_to.do?uri=%2F$pa_dashboard.do%3Fsysparm_dashboard%3D0e6b3803db49e01492f4d8c2f396191a%26sysparm_tab%3D428b7c03db49e01492f4d8c2f39619a3%26sysparm_cancelable%3Dtrue%26sysparm_editable%3Dtrue%26sysparm_active_panel%3DquickLayoutSideContent' },
+      { name:'Global Site Analysis (Tableau)',     url:'https://tabi/#/site/GlobalServices/views/GlobalSiteAnalysisv1/GlobalSiteAnalysis?:iid=1' },
+      { name:'GO PING management report (Power BI)', url:'https://app.powerbi.com/groups/me/reports/62c9e56a-563a-43a6-9cc2-cf2a67eb5e8f/4d46de5b5ee8d0c59671?ctid=c8eca3ca-1276-46d5-9d9d-a0f2a028920f&experience=power-bi' }
+    ];
+
+    let dashboards = [
+      /* --- SAMPLE SUBSET; replace with your full list --- */
+      { domain:'Attendance', region:'Israel',     name:'Amdocs Park Attendance', url:'https://tabi/#/site/GlobalServices/views/AmdocsParkAttendanceDataLake/AmdocsParkAttendance?:iid=1' },
+      { domain:'Attendance', region:'Israel',     name:'Israel Attendance',       url:'https://tabi/#/site/GlobalServices/views/IsraelAttendance/RegionalAttendance?:iid=2' },
+      { domain:'EHS, Security', region:'Global',  name:'EHS Criticality Buildings Summary', url:'https://tabi/#/site/GlobalServices/views/EHSCriticalityBuildingsSummary/EHSCriticalityBuildingsSummary' },
+      { domain:'Travel & Immigration', region:'Global', name:'Active Relocation', url:'https://tabi/#/site/GlobalServices/views/ActiveRelocation/ActiveRelocation?:iid=1' },
+      { domain:'Real Estate & Facilities', region:'Global', name:'Global Site Analysis', url:'https://tabi/#/site/GlobalServices/views/GlobalSiteAnalysisv1/GlobalSiteAnalysis' }
+    ];
+
+    /* -----------------------------
+       State & element references
+       ----------------------------- */
+    const state = {
+      domain: '',
+      region: '',
+      search: '',
+      sort: 'name',
+      favorites: new Set(JSON.parse(localStorage.getItem('favorites') || '[]')) // FIXED
+    };
+
+    const el = {
+      search:        document.getElementById('search'),
+      region:        document.getElementById('region'),
+      sort:          document.getElementById('sort'),
+      reset:         document.getElementById('reset'),
+      domains:       document.getElementById('domains'),
+      grid:          document.getElementById('grid'),
+      lastUpdated:   document.getElementById('lastUpdated'),
+      favoritesSection: document.getElementById('favorites-section'),
+      favoritesGrid: document.getElementById('favoritesGrid'),
+      showFavs:      document.getElementById('showFavs'),
+      openFiltered:  document.getElementById('openFiltered'),
+      openFavs:      document.getElementById('openFavs'),
+      quickGrid:     document.getElementById('quickGrid'),
+      dimRange:      document.getElementById('dimRange'),
+    };
+
+    /* -----------------------------
+       Helpers
+       ----------------------------- */
+    const uniq = arr => [...new Set(arr)].sort((a,b)=>a.localeCompare(b));
+    const clamp = (a, min=0, max=1) => Math.max(min, Math.min(max, a));
+
+    function initFilters() {
+      // Regions
+      for (const r of uniq(dashboards.map(d=>d.region))) {
+        const opt = document.createElement('option');
+        opt.value = r; opt.textContent = r; el.region.appendChild(opt);
+      }
+      // Domain chips
+      for (const d of uniq(dashboards.map(x=>x.domain))) {
+        const chip = document.createElement('button');
+        chip.type='button'; chip.className='chip'; chip.textContent=d; chip.setAttribute('data-domain', d);
+        chip.addEventListener('click', ()=>{
+          state.domain = (state.domain===d ? '' : d);
+          updateChips(); render();
+        });
+        el.domains.appendChild(chip);
+      }
+    }
+
+    function updateChips() {
+      document.querySelectorAll('.chip').forEach(c=>{
+        c.classList.toggle('active', c.getAttribute('data-domain')===state.domain);
+      });
+    }
+
+    // FILTERS + SORT (fixed operators & comparators)
+    function applyFilters(list) {
+      let out = list.filter(d =>
+        (!state.domain || d.domain === state.domain) &&
+        (!state.region || d.region === state.region) &&
+        (!state.search || (d.name + " " + d.domain + " " + d.region).toLowerCase().includes(state.search))
+      );
+
+      const cmp = {
+        name:   (a,b)=> a.name.localeCompare(b.name),
+        domain: (a,b)=> a.domain.localeCompare(b.domain) || a.name.localeCompare(b.name),
+        region: (a,b)=> a.region.localeCompare(b.region) || a.name.localeCompare(b.name),
+      }[state.sort];
+
+      out.sort(cmp);
+
+      if (el.showFavs.checked) {
+        out.sort((a,b)=> (state.favorites.has(a.url) ? -1 : 0) - (state.favorites.has(b.url) ? -1 : 0));
+      }
+      return out;
+    }
+
+    // Clipboard with graceful fallback
+    function copyLink(url, btn) {
+      if (navigator.clipboard?.writeText) {
+        navigator.clipboard.writeText(url)
+          .then(()=>{ btn.textContent='Copied!'; setTimeout(()=>btn.textContent='Copy link', 1200); })
+          .catch(()=>{ prompt('Copy the link:', url); });
+      } else {
+        prompt('Copy the link:', url);
+      }
+    }
+
+    function card(d) {
+      const c = document.createElement('article'); c.className='card'; c.setAttribute('role','listitem'); c.tabIndex = 0;
+      const name = document.createElement('div'); name.className='name'; name.textContent = d.name; c.appendChild(name);
+
+      const meta = document.createElement('div'); meta.className='meta';
+      const b1 = document.createElement('span'); b1.className='badge'; b1.textContent=d.domain; meta.appendChild(b1);
+      const b2 = document.createElement('span'); b2.className='badge'; b2.textContent=d.region; meta.appendChild(b2);
+      c.appendChild(meta);
+
+      const actions = document.createElement('div'); actions.className='actions';
+      const open = document.createElement('a'); open.href=d.url; open.target='_blank'; open.rel='noopener'; open.className='btn primary'; open.textContent='Open'; open.title='Open in new tab'; actions.appendChild(open);
+
+      const copy = document.createElement('button'); copy.className='btn copy'; copy.textContent='Copy link'; copy.title='Copy link to clipboard';
+      copy.addEventListener('click', ()=> copyLink(d.url, copy)); actions.appendChild(copy);
+
+      const fav = document.createElement('button'); fav.className='btn fav'; fav.innerHTML = state.favorites.has(d.url)? '★ Favorite' : '☆ Favorite';
+      fav.title = 'Toggle favorite';
+      fav.addEventListener('click', ()=>{
+        if (state.favorites.has(d.url)) state.favorites.delete(d.url); else state.favorites.add(d.url);
+        localStorage.setItem('favorites', JSON.stringify([...state.favorites]));
+        fav.innerHTML = state.favorites.has(d.url)? '★ Favorite' : '☆ Favorite';
+        renderFavorites();
+      });
+      actions.appendChild(fav);
+
+      c.appendChild(actions);
+      return c;
+    }
+
+    function quickCard(q) {
+      const c = document.createElement('article'); c.className='card'; c.setAttribute('role','listitem'); c.tabIndex = 0;
+      const name = document.createElement('div'); name.className='name'; name.textContent = q.name; c.appendChild(name);
+      const actions = document.createElement('div'); actions.className='actions';
+      const open = document.createElement('a'); open.href=q.url; open.target='_blank'; open.rel='noopener'; open.className='btn primary'; open.textContent='Open'; open.title='Open in new tab'; actions.appendChild(open);
+      const copy = document.createElement('button'); copy.className='btn copy'; copy.textContent='Copy link'; copy.title='Copy link to clipboard';
+      copy.addEventListener('click', ()=> copyLink(q.url, copy)); actions.appendChild(copy);
+      c.appendChild(actions);
+      return c;
+    }
+
+    function render() {
+      const list = applyFilters(dashboards);
+      el.grid.innerHTML=''; el.grid.setAttribute('role','list');
+      list.forEach(d => el.grid.appendChild(card(d)));
+    }
+
+    function renderFavorites() {
+      const favs = dashboards.filter(d => state.favorites.has(d.url));
+      el.favoritesSection.hidden = favs.length===0;
+      el.favoritesGrid.innerHTML=''; el.favoritesGrid.setAttribute('role','list');
+      favs.forEach(d=> el.favoritesGrid.appendChild(card(d)));
+    }
+
+    function renderQuick() {
+      el.quickGrid.innerHTML=''; el.quickGrid.setAttribute('role','list');
+      quickLinks.forEach(q=> el.quickGrid.appendChild(quickCard(q)));
+    }
+
+    function hookEvents() {
+      el.search.addEventListener('input', e=>{ state.search = e.target.value.trim().toLowerCase(); render(); });
+      el.region.addEventListener('change', e=>{ state.region = e.target.value; render(); });
+      el.sort.addEventListener('change', e=>{ state.sort = e.target.value; render(); });
+      el.reset.addEventListener('click', ()=>{
+        state.domain=''; state.region=''; state.search=''; state.sort='name';
+        el.search.value=''; el.region.value=''; el.sort.value='name';
+        updateChips(); render();
+      });
+
+      // Batched open to avoid popup blockers
+      el.openFiltered.addEventListener('click', ()=>{
+        const links = applyFilters(dashboards).map(d => d.url);
+        let i = 0;
+        const openNextBatch = () => {
+          const batch = links.slice(i, i + 5); // open 5 at a time
+          batch.forEach(u => window.open(u, '_blank', 'noopener'));
+          i += 5;
+          if (i < links.length) setTimeout(openNextBatch, 800);
+        };
+        openNextBatch();
+      });
+
+      el.openFavs.addEventListener('click', ()=>{
+        const favs = dashboards.filter(d=> state.favorites.has(d.url)).map(d=>d.url);
+        let i = 0;
+        const openNextBatch = () => {
+          const batch = favs.slice(i, i + 5);
+          batch.forEach(u => window.open(u, '_blank', 'noopener'));
+          i += 5;
+          if (i < favs.length) setTimeout(openNextBatch, 800);
+        };
+        openNextBatch();
+      });
+
+      // Background dimmer control (alpha clamp safe)
+      el.dimRange.addEventListener('input', (e)=>{
+        const a = clamp(Number(e.target.value)/100, 0, 1);
+        document.documentElement.style.setProperty('--overlay-alpha', String(a));
+      });
+    }
+
+    function init() {
+      initFilters(); updateChips();
+      render(); renderFavorites(); renderQuick(); hookEvents();
+      el.lastUpdated.textContent = new Date().toLocaleDateString(undefined, {year:'numeric', month:'short', day:'numeric'});
+    }
+
+    init();
+  </script>
+</body>
+</html>
