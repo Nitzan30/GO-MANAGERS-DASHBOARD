@@ -1,462 +1,349 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Managers – Reports & Dashboards</title>
-  <style>
-    :root {
-      /* Brand palette */
-      --brand-magenta: #E00065;
-      --brand-orange: #FF8A00;   /* used for credit color */
-      --brand-plum:   #5E2B97;
-      --brand-dark:   #000000;
-      --brand-gray:   #D9DBE2;
-      --text:         #FFFFFF;
-      --muted:        var(--brand-gray);
-      --shadow:       0 10px 24px rgba(0,0,0,.35);
-      --overlay-alpha: 0.5;  /* controlled by the dimmer slider */
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager's Cockpit</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/inter-ui/3.19.3/inter.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
-    * { box-sizing: border-box; }
-    html, body { height: 100%; }
-    body {
-      margin: 0;
-      color: var(--text);
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial;
-      background-color: var(--brand-dark);
-      /* Lightweight background; swap to an image if you prefer */
-      background-image:
-        radial-gradient(1200px 800px at 20% 10%, rgba(224,0,101,.12), transparent 70%),
-        radial-gradient(800px 600px at 80% 60%, rgba(255,138,0,.10), transparent 60%),
-        linear-gradient(180deg, #0a0a0a, #000);
-      background-size: cover;
-      background-position: center;
-      background-attachment: fixed;
-    }
+    <style>
+        /* --- 1. COLOR SETTINGS (CHANGE THESE IF NEEDED) --- */
+        :root {
+            --primary-color: #0f172a;       /* Dark Navy Background */
+            --sidebar-color: #1e293b;       /* Slightly lighter sidebar */
+            --accent-color: #0ea5e9;        /* Bright Blue/Teal for highlights */
+            --text-main: #f8fafc;           /* White text */
+            --text-muted: #94a3b8;          /* Grey text */
+            --card-bg: #334155;             /* Card background */
+            --card-hover: #475569;          /* Card hover state */
+            --success-color: #10b981;       /* Green for 'Live' status */
+        }
 
-    /* Film overlay for readability (alpha controlled by slider) */
-    body::before {
-      content: "";
-      position: fixed; inset: 0; z-index: 0;
-      background: linear-gradient(
-        135deg,
-        rgba(224,0,101,var(--overlay-alpha)),
-        rgba(255,138,0,calc(max(var(--overlay-alpha) - .2, 0))),
-        rgba(0,0,0,calc(min(var(--overlay-alpha) + .15, 1)))
-      );
-      pointer-events: none;
-    }
+        /* --- 2. LAYOUT & DESIGN --- */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary-color);
+            color: var(--text-main);
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
 
-    .page { position: relative; z-index: 1; }
+        /* Sidebar Styling */
+        .sidebar {
+            width: 260px;
+            background-color: var(--sidebar-color);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(255,255,255,0.05);
+        }
 
-    header {
-      position: sticky; top: 0; z-index: 5;
-      background: linear-gradient(180deg, rgba(0,0,0,.82), rgba(0,0,0,.6));
-      backdrop-filter: blur(8px) saturate(1.2);
-      border-bottom: 1px solid var(--brand-gray);
-    }
-    .wrap { max-width: 1200px; margin: 0 auto; padding: 16px; }
-    .title { display: flex; align-items: center; gap: 12px; }
-    .title h1 { margin: 0; font-size: 20px; letter-spacing: .2px; }
+        .logo-area {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-    .filters {
-      display: grid; grid-template-columns: 1fr 140px 180px 140px;
-      gap: 10px; margin-top: 12px;
-    }
-    .filters input[type="search"], .filters select, .chipbar {
-      background: rgba(0,0,0,0.75); color: var(--text);
-      border: 1px solid var(--brand-gray); border-radius: 10px;
-      padding: 10px 12px; box-shadow: var(--shadow);
-    }
+        .logo-icon {
+            color: var(--accent-color);
+        }
 
-    .chipbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-    .chip {
-      cursor: pointer; user-select: none; padding: 6px 10px; border-radius: 20px;
-      background: rgba(30,30,30,.85); border: 1px solid var(--brand-gray);
-      color: var(--muted); transition: .2s; backdrop-filter: blur(6px);
-    }
-    .chip.active { background: var(--brand-plum); color: #fff; }
+        .filter-group {
+            margin-bottom: 2rem;
+        }
 
-    main { padding: 24px 16px; }
-    .section { margin: 18px auto; max-width: 1200px; }
-    .section-header {
-      display: flex; align-items: center; justify-content: space-between; gap: 8px;
-      background: rgba(0,0,0,0.75); border: 1px solid var(--brand-gray);
-      border-radius: 12px; padding: 10px 14px; box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
-    }
-    .section-header h2 { margin: 0; font-size: 16px; }
-    .section-header button {
-      background: rgba(30,30,30,.85); color: var(--text);
-      border: 1px solid var(--brand-gray); border-radius: 8px;
-      padding: 8px 12px; cursor: pointer;
-    }
+        .filter-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
 
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; margin-top: 12px; }
-    .grid[role="list"] .card[role="listitem"] { outline: none; }
+        select, input {
+            width: 100%;
+            padding: 10px;
+            background: rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            outline: none;
+        }
 
-    .card {
-      background: rgba(0,0,0,0.68); border: 1px solid var(--brand-gray);
-      border-radius: 12px; padding: 12px; box-shadow: var(--shadow);
-      display: grid; grid-template-rows: auto auto auto; gap: 10px;
-      backdrop-filter: blur(8px);
-    }
-    .card:focus-visible { outline: 2px solid var(--brand-plum); outline-offset: 3px; }
+        select:focus, input:focus {
+            border-color: var(--accent-color);
+        }
 
-    .name { font-weight: 600; letter-spacing: .2px; }
-    .meta { display: flex; flex-wrap: wrap; gap: 8px; }
-    .badge {
-      font-size: 12px; padding: 4px 8px; border-radius: 14px;
-      border: 1px solid var(--brand-gray); color: var(--muted);
-      background: rgba(15,15,15,.85);
-    }
-    .actions { display: flex; gap: 8px; }
-    .btn {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: rgba(15,15,15,.9); color: var(--text);
-      border: 1px solid var(--brand-gray); border-radius: 8px;
-      padding: 8px 10px; text-decoration: none; cursor: pointer;
-    }
-    .btn.primary { background-image: linear-gradient(135deg, var(--brand-magenta), var(--brand-orange)); border-color: var(--brand-gray); }
-    .btn.copy    { background: linear-gradient(180deg, #244a32, #173b27); border-color: rgba(100, 211, 139, .5); }
-    .btn.fav     { background: #3a3042; }
+        /* Main Content Styling */
+        .main-content {
+            flex: 1;
+            padding: 2rem 3rem;
+            overflow-y: auto;
+        }
 
-    footer {
-      color: var(--muted); text-align: center; padding: 22px;
-      backdrop-filter: blur(6px);
-    }
-    footer .ticket { display:inline-block; margin-left:8px; }
-    footer .ticket a { color: var(--brand-orange); text-decoration: none; font-weight: 600; }
-    footer .ticket a:hover, footer .ticket a:focus { text-decoration: underline; }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
 
-    /* CREDIT: orange + bold */
-    footer .credit {
-      color: var(--brand-orange);   /* Orange */
-      font-weight: 700;             /* Bold  */
-      display: inline-block;
-      margin-left: 12px;
-    }
+        .welcome-text h1 { margin: 0; font-size: 1.8rem; }
+        .welcome-text p { margin: 5px 0 0; color: var(--text-muted); }
 
-    @media (max-width: 640px) {
-      .filters { grid-template-columns: 1fr; }
-      footer .credit { display: block; margin-left: 0; margin-top: 8px; }
-    }
+        /* Grid System */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
 
-    /* Accessibility: background dimmer control block */
-    .dimmer { position: fixed; right: 16px; bottom: 16px; z-index: 3; }
-    .dimmer input { width: 220px; }
-    .dimmer label {
-      font-size: 12px; color: var(--muted); display:block; margin-bottom:6px;
-      background: rgba(0,0,0,.6); padding:6px 8px; border: 1px solid var(--brand-gray); border-radius: 8px;
-    }
+        /* Card Styling */
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 140px;
+        }
 
-    @media (prefers-reduced-motion: reduce) {
-      * { transition: none !important; animation: none !important; }
-    }
-  </style>
+        .card:hover {
+            transform: translateY(-5px);
+            background-color: var(--card-hover);
+            border-color: var(--accent-color);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        /* Dynamic Colors for specific platform icons */
+        .icon-powerbi { color: #F2C811; background: rgba(242, 200, 17, 0.1); }
+        .icon-tableau { color: #E97627; background: rgba(233, 118, 39, 0.1); }
+        .icon-snow { color: #81B5A1; background: rgba(129, 181, 161, 0.1); } /* ServiceNow Green */
+
+        .domain-tag {
+            font-size: 0.7rem;
+            padding: 4px 8px;
+            border-radius: 20px;
+            background: rgba(14, 165, 233, 0.2);
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            line-height: 1.4;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-meta {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+    </style>
 </head>
 <body>
-  <div class="page">
-    <header>
-      <div class="wrap">
-        <div class="title">
-          <!-- Simple brand mark -->
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <defs>
-              <linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%"  stop-color="var(--brand-magenta)"/>
-                <stop offset="100%" stop-color="var(--brand-orange)"/>
-              </linearGradient>
-            </defs>
-            <path d="M12 3l9 4-9 4-9-4 9-4z" fill="url(#grad)"/>
-            <path d="M21 12l-9 4-9-4" stroke="url(#grad)" stroke-width="1.6" stroke-linecap="round"/>
-          </svg>
-          <h1>Managers – Reports & Dashboards</h1>
+
+    <div class="sidebar">
+        <div class="logo-area">
+            <i class="fas fa-chart-line logo-icon"></i>
+            <span>Cockpit</span>
         </div>
 
-        <div class="filters" role="region" aria-label="Filters">
-          <input id="search" type="search" placeholder="Search by name, domain, or region…" aria-label="Search dashboards"/>
-          <select id="region" aria-label="Filter by region"><option value="">All regions</option></select>
-          <select id="sort" aria-label="Sort">
-            <option value="name">Sort: Name (A→Z)</option>
-            <option value="domain">Sort: Domain</option>
-            <option value="region">Sort: Region</option>
-          </select>
-          <button id="reset" class="btn" aria-label="Reset filters">Reset</button>
+        <div class="filter-group">
+            <div class="filter-label">Search</div>
+            <input type="text" id="searchInput" placeholder="Find dashboard..." onkeyup="filterDashboards()">
         </div>
 
-        <div class="chipbar" id="domains" aria-label="Domain filters"></div>
-      </div>
-    </header>
-
-    <main>
-      <section class="section" id="quick-links">
-        <div class="section-header">
-          <h2>Quick links</h2>
-          <div style="display:flex; gap:8px; align-items:center; color:var(--muted)">Commonly used resources</div>
+        <div class="filter-group">
+            <div class="filter-label">Filter by Domain</div>
+            <select id="domainSelect" onchange="filterDashboards()">
+                <option value="All">All Domains</option>
+                </select>
         </div>
-        <div class="grid" id="quickGrid" role="list"></div>
-      </section>
 
-      <section class="section" id="favorites-section" hidden>
-        <div class="section-header">
-          <h2>⭐ Favorites</h2>
-          <button class="btn" id="openFavs">Open all favorites</button>
+        <div class="filter-group">
+            <div class="filter-label">Filter by Region</div>
+            <select id="regionSelect" onchange="filterDashboards()">
+                <option value="All">All Regions</option>
+                </select>
         </div>
-        <div class="grid" id="favoritesGrid" role="list"></div>
-      </section>
-
-      <section class="section" id="results">
-        <div class="section-header">
-          <h2>All dashboards</h2>
-        <div style="display:flex; gap:8px; align-items:center">
-            <label style="display:flex; gap:6px; align-items:center; color:var(--muted)">
-              <input type="checkbox" id="showFavs"/> Show favorites first
-            </label>
-            <button class="btn" id="openFiltered">Open filtered</button>
-          </div>
-        </div>
-        <div class="grid" id="grid" role="list"></div>
-      </section>
-    </main>
-
-    <footer>
-      Built for managers · Simple · Fast · Self-serve · Last updated <span id="lastUpdated"></span>
-      <!-- CREDIT (orange, bold) -->
-      · <span class="credit" aria-label="Creator credit">Created by Nitzan Raich</span>
-      <span class="ticket">Need to open a ticket for GO BI team?
-        <a href="https://amdocsprodmain.service-now.com/one_portal?id=aop_sc_cat_item&sys_id=9a8c607287eaced01c4431d73cbb3526&category_sys_id=6f38d211877286904f7762480cbb HERE</a>
-      </span>
-    </footer>
-
-    <!-- Accessibility: background dimmer -->
-    <div class="dimmer">
-      <label for="dimRange">Background dimmer</label>
-      <input id="dimRange" type="range" min="0" max="100" value="50" />
     </div>
-  </div>
 
-  <script>
-    /* -----------------------------
-       Data (replace with your full lists)
-       ----------------------------- */
-    let quickLinks = [
-      { name:'2026 Planned Projects (Monday.com)', url:'https://amdocscorp.monday.com/boards/1927278786/views/40027188' },
-      { name:'Flex set report (Power BI)',         url:'https://app.powerbi.com/groups/me/apps/a9a45472-96d0-4062-84fb-30c1dcdf8dfd/reports/69daf43d-df81-4b53-a15e-9e49968f3134/ReportSectione749003ebae51abf2453?experience=power-bi' },
-      { name:'SNOW DASH',                          url:'https://amdocsprodmain.service-now.com/nav_to.do?uri=%2F$pa_dashboard.do%3Fsysparm_dashboard%3D0e6b3803db49e01492f4d8c2f396191a%26sysparm_tab%3D428b7c03db49e01492f4d8c2f39619a3%26sysparm_cancelable%3Dtrue%26sysparm_editable%3Dtrue%26sysparm_active_panel%3DquickLayoutSideContent' },
-      { name:'Global Site Analysis (Tableau)',     url:'https://tabi/#/site/GlobalServices/views/GlobalSiteAnalysisv1/GlobalSiteAnalysis?:iid=1' },
-      { name:'GO PING management report (Power BI)', url:'https://app.powerbi.com/groups/me/reports/62c9e56a-563a-43a6-9cc2-cf2a67eb5e8f/4d46de5b5ee8d0c59671?ctid=c8eca3ca-1276-46d5-9d9d-a0f2a028920f&experience=power-bi' }
-    ];
+    <div class="main-content">
+        <div class="header">
+            <div class="welcome-text">
+                <h1>Executive Overview</h1>
+                <p>Access your global and regional KPIs.</p>
+            </div>
+            <div style="text-align: right; color: var(--text-muted);">
+                <span id="countDisplay">0</span> Dashboards available
+            </div>
+        </div>
 
-    let dashboards = [
-      /* --- SAMPLE SUBSET; replace with your full list --- */
-      { domain:'Attendance', region:'Israel',     name:'Amdocs Park Attendance', url:'https://tabi/#/site/GlobalServices/views/AmdocsParkAttendanceDataLake/AmdocsParkAttendance?:iid=1' },
-      { domain:'Attendance', region:'Israel',     name:'Israel Attendance',       url:'https://tabi/#/site/GlobalServices/views/IsraelAttendance/RegionalAttendance?:iid=2' },
-      { domain:'EHS, Security', region:'Global',  name:'EHS Criticality Buildings Summary', url:'https://tabi/#/site/GlobalServices/views/EHSCriticalityBuildingsSummary/EHSCriticalityBuildingsSummary' },
-      { domain:'Travel & Immigration', region:'Global', name:'Active Relocation', url:'https://tabi/#/site/GlobalServices/views/ActiveRelocation/ActiveRelocation?:iid=1' },
-      { domain:'Real Estate & Facilities', region:'Global', name:'Global Site Analysis', url:'https://tabi/#/site/GlobalServices/views/GlobalSiteAnalysisv1/GlobalSiteAnalysis' }
-    ];
+        <div class="dashboard-grid" id="gridContainer">
+            </div>
+    </div>
 
-    /* -----------------------------
-       State & element references
-       ----------------------------- */
-    const state = {
-      domain: '',
-      region: '',
-      search: '',
-      sort: 'name',
-      favorites: new Set(JSON.parse(localStorage.getItem('favorites') || '[]')) // FIXED
-    };
+    <script>
+        // --- 1. THE DATA (Extracted from your CSV) ---
+        const dashboardData = [
+            { domain: "GO Ping", region: "Global", name: "GO Ping Dashboard", url: "https://app.powerbi.com/groups/me/reports/62c9e56a-563a-43a6-9cc2-cf2a67eb5e8f" },
+            { domain: "Global Site Analysis", region: "Global", name: "Global Site Analysis", url: "https://tabi/#/site/GlobalServices/views/GlobalSiteAnalysisv1/GlobalSiteAnalysis?:iid=1" },
+            { domain: "SNOW DASH", region: "Global", name: "SNOW Incident Dash", url: "https://amdocsprodmain.service-now.com/nav_to.do?uri=%2F$pa_dashboard.do" },
+            { domain: "FlexSeat", region: "Global", name: "FlexSeat Report", url: "https://app.powerbi.com/groups/me/apps/a9a45472-96d0-4062-84fb-30" },
+            { domain: "Travel & Immigration", region: "Global", name: "Group Trip / Direction", url: "https://tabi/#/site/GlobalServices/views/GroupTriptoSameDirection" },
+            { domain: "Travel & Immigration", region: "Global", name: "GS Travel Monthly Deck", url: "https://tabi/#/site/GlobalServices/views/GSTravelforMonthlydeck" },
+            { domain: "Travel & Immigration", region: "Global", name: "High Cost Trips", url: "https://tabi/#/site/GlobalServices/views/HighCostTrips" },
+            { domain: "Travel & Immigration", region: "Global", name: "Israel Employee Travel", url: "https://tabi/#/site/GlobalServices/views/ISRAELEmployeesTravelDetails" },
+            { domain: "Travel & Immigration", region: "Global", name: "Israeli Reservists", url: "https://tabi/#/site/GlobalServices/views/IsraeliReservistsTravelingDetails" },
+            { domain: "Travel & Immigration", region: "Global", name: "OPEX Summary", url: "https://tabi/#/site/GlobalServices/views/OPEXSummary" },
+            { domain: "Travel & Immigration", region: "Global", name: "TIR Dashboard", url: "https://tabi/#/site/GlobalServices/views/TIRDashboard" },
+            { domain: "Travel & Immigration", region: "Global", name: "Travel KPIs", url: "https://tabi/#/site/GlobalServices/views/TravelKPIs" },
+            { domain: "Travel & Immigration", region: "Global", name: "Travel Warning Dash", url: "https://tabi/#/site/GlobalServices/views/TravelWarningDashboard" },
+            { domain: "Travel & Immigration", region: "Global", name: "Traveller Details (Mex/Bra/SA)", url: "https://tabi/#" }
+        ];
 
-    const el = {
-      search:        document.getElementById('search'),
-      region:        document.getElementById('region'),
-      sort:          document.getElementById('sort'),
-      reset:         document.getElementById('reset'),
-      domains:       document.getElementById('domains'),
-      grid:          document.getElementById('grid'),
-      lastUpdated:   document.getElementById('lastUpdated'),
-      favoritesSection: document.getElementById('favorites-section'),
-      favoritesGrid: document.getElementById('favoritesGrid'),
-      showFavs:      document.getElementById('showFavs'),
-      openFiltered:  document.getElementById('openFiltered'),
-      openFavs:      document.getElementById('openFavs'),
-      quickGrid:     document.getElementById('quickGrid'),
-      dimRange:      document.getElementById('dimRange'),
-    };
+        // --- 2. LOGIC TO RENDER CARDS ---
+        const grid = document.getElementById('gridContainer');
+        const domainSelect = document.getElementById('domainSelect');
+        const regionSelect = document.getElementById('regionSelect');
+        const searchInput = document.getElementById('searchInput');
+        const countDisplay = document.getElementById('countDisplay');
 
-    /* -----------------------------
-       Helpers
-       ----------------------------- */
-    const uniq = arr => [...new Set(arr)].sort((a,b)=>a.localeCompare(b));
-    const clamp = (a, min=0, max=1) => Math.max(min, Math.min(max, a));
+        // Helper: Get Icon based on URL/Name
+        function getIcon(item) {
+            const lowerUrl = item.url.toLowerCase();
+            const lowerName = item.name.toLowerCase();
 
-    function initFilters() {
-      // Regions
-      for (const r of uniq(dashboards.map(d=>d.region))) {
-        const opt = document.createElement('option');
-        opt.value = r; opt.textContent = r; el.region.appendChild(opt);
-      }
-      // Domain chips
-      for (const d of uniq(dashboards.map(x=>x.domain))) {
-        const chip = document.createElement('button');
-        chip.type='button'; chip.className='chip'; chip.textContent=d; chip.setAttribute('data-domain', d);
-        chip.addEventListener('click', ()=>{
-          state.domain = (state.domain===d ? '' : d);
-          updateChips(); render();
-        });
-        el.domains.appendChild(chip);
-      }
-    }
+            if (lowerUrl.includes('powerbi')) return '<i class="fas fa-chart-bar icon-powerbi"></i>'; // PowerBI
+            if (lowerUrl.includes('tabi') || lowerUrl.includes('tableau')) return '<i class="fas fa-chart-pie icon-tableau"></i>'; // Tableau
+            if (lowerUrl.includes('service-now') || lowerUrl.includes('snow')) return '<i class="fas fa-server icon-snow"></i>'; // ServiceNow
+            
+            return '<i class="fas fa-file-alt"></i>'; // Default
+        }
 
-    function updateChips() {
-      document.querySelectorAll('.chip').forEach(c=>{
-        c.classList.toggle('active', c.getAttribute('data-domain')===state.domain);
-      });
-    }
+        // Helper: Get Icon class for styling adjustments
+        function getIconClass(item) {
+            const lowerUrl = item.url.toLowerCase();
+            if (lowerUrl.includes('powerbi')) return 'icon-powerbi';
+            if (lowerUrl.includes('tabi')) return 'icon-tableau';
+            if (lowerUrl.includes('service-now')) return 'icon-snow';
+            return '';
+        }
 
-    // FILTERS + SORT (fixed operators & comparators)
-    function applyFilters(list) {
-      let out = list.filter(d =>
-        (!state.domain || d.domain === state.domain) &&
-        (!state.region || d.region === state.region) &&
-        (!state.search || (d.name + " " + d.domain + " " + d.region).toLowerCase().includes(state.search))
-      );
+        function renderCards(data) {
+            grid.innerHTML = '';
+            
+            data.forEach(item => {
+                const iconHtml = getIcon(item);
+                const iconClass = getIconClass(item); // To use specific class logic if needed inside innerHTML
 
-      const cmp = {
-        name:   (a,b)=> a.name.localeCompare(b.name),
-        domain: (a,b)=> a.domain.localeCompare(b.domain) || a.name.localeCompare(b.name),
-        region: (a,b)=> a.region.localeCompare(b.region) || a.name.localeCompare(b.name),
-      }[state.sort];
+                const card = document.createElement('a');
+                card.className = 'card';
+                card.href = item.url;
+                card.target = "_blank"; // Open in new tab
 
-      out.sort(cmp);
+                card.innerHTML = `
+                    <div class="card-top">
+                        <div class="card-icon ${iconClass}">
+                            ${iconHtml.replace(/<[^>]*>/g, '') /* Clean strip if reusing class, or just use raw HTML below */}
+                            ${iconHtml.includes('fa-') ? '' : '<i class="fas fa-link"></i>'} 
+                            ${iconHtml}
+                        </div>
+                        <span class="domain-tag">${item.domain}</span>
+                    </div>
+                    <div>
+                        <div class="card-title">${item.name}</div>
+                        <div class="card-meta">
+                            <i class="fas fa-globe"></i> ${item.region}
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+            countDisplay.innerText = data.length;
+        }
 
-      if (el.showFavs.checked) {
-        out.sort((a,b)=> (state.favorites.has(a.url) ? -1 : 0) - (state.favorites.has(b.url) ? -1 : 0));
-      }
-      return out;
-    }
+        // --- 3. FILTER LOGIC ---
+        function filterDashboards() {
+            const domainVal = domainSelect.value;
+            const regionVal = regionSelect.value;
+            const searchVal = searchInput.value.toLowerCase();
 
-    // Clipboard with graceful fallback
-    function copyLink(url, btn) {
-      if (navigator.clipboard?.writeText) {
-        navigator.clipboard.writeText(url)
-          .then(()=>{ btn.textContent='Copied!'; setTimeout(()=>btn.textContent='Copy link', 1200); })
-          .catch(()=>{ prompt('Copy the link:', url); });
-      } else {
-        prompt('Copy the link:', url);
-      }
-    }
+            const filtered = dashboardData.filter(item => {
+                const matchDomain = domainVal === 'All' || item.domain === domainVal;
+                const matchRegion = regionVal === 'All' || item.region === regionVal;
+                const matchSearch = item.name.toLowerCase().includes(searchVal) || 
+                                    item.domain.toLowerCase().includes(searchVal);
+                return matchDomain && matchRegion && matchSearch;
+            });
 
-    function card(d) {
-      const c = document.createElement('article'); c.className='card'; c.setAttribute('role','listitem'); c.tabIndex = 0;
-      const name = document.createElement('div'); name.className='name'; name.textContent = d.name; c.appendChild(name);
+            renderCards(filtered);
+        }
 
-      const meta = document.createElement('div'); meta.className='meta';
-      const b1 = document.createElement('span'); b1.className='badge'; b1.textContent=d.domain; meta.appendChild(b1);
-      const b2 = document.createElement('span'); b2.className='badge'; b2.textContent=d.region; meta.appendChild(b2);
-      c.appendChild(meta);
+        // --- 4. INIT (Populate Dropdowns) ---
+        function init() {
+            // Unique Domains
+            const domains = [...new Set(dashboardData.map(d => d.domain))].sort();
+            domains.forEach(d => {
+                const opt = document.createElement('option');
+                opt.value = d;
+                opt.innerText = d;
+                domainSelect.appendChild(opt);
+            });
 
-      const actions = document.createElement('div'); actions.className='actions';
-      const open = document.createElement('a'); open.href=d.url; open.target='_blank'; open.rel='noopener'; open.className='btn primary'; open.textContent='Open'; open.title='Open in new tab'; actions.appendChild(open);
+            // Unique Regions
+            const regions = [...new Set(dashboardData.map(d => d.region))].sort();
+            regions.forEach(r => {
+                const opt = document.createElement('option');
+                opt.value = r;
+                opt.innerText = r;
+                regionSelect.appendChild(opt);
+            });
 
-      const copy = document.createElement('button'); copy.className='btn copy'; copy.textContent='Copy link'; copy.title='Copy link to clipboard';
-      copy.addEventListener('click', ()=> copyLink(d.url, copy)); actions.appendChild(copy);
+            renderCards(dashboardData);
+        }
 
-      const fav = document.createElement('button'); fav.className='btn fav'; fav.innerHTML = state.favorites.has(d.url)? '★ Favorite' : '☆ Favorite';
-      fav.title = 'Toggle favorite';
-      fav.addEventListener('click', ()=>{
-        if (state.favorites.has(d.url)) state.favorites.delete(d.url); else state.favorites.add(d.url);
-        localStorage.setItem('favorites', JSON.stringify([...state.favorites]));
-        fav.innerHTML = state.favorites.has(d.url)? '★ Favorite' : '☆ Favorite';
-        renderFavorites();
-      });
-      actions.appendChild(fav);
+        init();
 
-      c.appendChild(actions);
-      return c;
-    }
-
-    function quickCard(q) {
-      const c = document.createElement('article'); c.className='card'; c.setAttribute('role','listitem'); c.tabIndex = 0;
-      const name = document.createElement('div'); name.className='name'; name.textContent = q.name; c.appendChild(name);
-      const actions = document.createElement('div'); actions.className='actions';
-      const open = document.createElement('a'); open.href=q.url; open.target='_blank'; open.rel='noopener'; open.className='btn primary'; open.textContent='Open'; open.title='Open in new tab'; actions.appendChild(open);
-      const copy = document.createElement('button'); copy.className='btn copy'; copy.textContent='Copy link'; copy.title='Copy link to clipboard';
-      copy.addEventListener('click', ()=> copyLink(q.url, copy)); actions.appendChild(copy);
-      c.appendChild(actions);
-      return c;
-    }
-
-    function render() {
-      const list = applyFilters(dashboards);
-      el.grid.innerHTML=''; el.grid.setAttribute('role','list');
-      list.forEach(d => el.grid.appendChild(card(d)));
-    }
-
-    function renderFavorites() {
-      const favs = dashboards.filter(d => state.favorites.has(d.url));
-      el.favoritesSection.hidden = favs.length===0;
-      el.favoritesGrid.innerHTML=''; el.favoritesGrid.setAttribute('role','list');
-      favs.forEach(d=> el.favoritesGrid.appendChild(card(d)));
-    }
-
-    function renderQuick() {
-      el.quickGrid.innerHTML=''; el.quickGrid.setAttribute('role','list');
-      quickLinks.forEach(q=> el.quickGrid.appendChild(quickCard(q)));
-    }
-
-    function hookEvents() {
-      el.search.addEventListener('input', e=>{ state.search = e.target.value.trim().toLowerCase(); render(); });
-      el.region.addEventListener('change', e=>{ state.region = e.target.value; render(); });
-      el.sort.addEventListener('change', e=>{ state.sort = e.target.value; render(); });
-      el.reset.addEventListener('click', ()=>{
-        state.domain=''; state.region=''; state.search=''; state.sort='name';
-        el.search.value=''; el.region.value=''; el.sort.value='name';
-        updateChips(); render();
-      });
-
-      // Batched open to avoid popup blockers
-      el.openFiltered.addEventListener('click', ()=>{
-        const links = applyFilters(dashboards).map(d => d.url);
-        let i = 0;
-        const openNextBatch = () => {
-          const batch = links.slice(i, i + 5); // open 5 at a time
-          batch.forEach(u => window.open(u, '_blank', 'noopener'));
-          i += 5;
-          if (i < links.length) setTimeout(openNextBatch, 800);
-        };
-        openNextBatch();
-      });
-
-      el.openFavs.addEventListener('click', ()=>{
-        const favs = dashboards.filter(d=> state.favorites.has(d.url)).map(d=>d.url);
-        let i = 0;
-        const openNextBatch = () => {
-          const batch = favs.slice(i, i + 5);
-          batch.forEach(u => window.open(u, '_blank', 'noopener'));
-          i += 5;
-          if (i < favs.length) setTimeout(openNextBatch, 800);
-        };
-        openNextBatch();
-      });
-
-      // Background dimmer control (alpha clamp safe)
-      el.dimRange.addEventListener('input', (e)=>{
-        const a = clamp(Number(e.target.value)/100, 0, 1);
-        document.documentElement.style.setProperty('--overlay-alpha', String(a));
-      });
-    }
-
-    function init() {
-      initFilters(); updateChips();
-      render(); renderFavorites(); renderQuick(); hookEvents();
-      el.lastUpdated.textContent = new Date().toLocaleDateString(undefined, {year:'numeric', month:'short', day:'numeric'});
-    }
-
-    init();
-  </script>
+    </script>
 </body>
 </html>
