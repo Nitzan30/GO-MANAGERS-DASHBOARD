@@ -8,47 +8,55 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
     <style>
-        /* --- BRAND COLOR SETTINGS --- */
+        /* --- BRAND CONFIGURATION --- */
         :root {
-            /* Backgrounds (Dark Executive Theme) */
-            --primary-color: #0f172a;       /* Dark Navy */
-            --sidebar-color: #1e293b;       /* Sidebar */
-            --card-bg: #334155;             /* Card BG */
-            --card-hover: #475569;          /* Card Hover */
-            
             /* Text */
-            --text-main: #f8fafc;           /* White */
-            --text-muted: #94a3b8;          /* Grey */
-
-            /* --- YOUR NEW COLORS --- */
-            --accent-color: #ec008c;        /* Magenta (Main Formal Secondary) */
+            --text-main: #ffffff;
+            --text-muted: #cbd5e1;
             
-            /* Palette for Icons/Tags */
-            --brand-yellow: #fdb515;        /* Yellow Orange */
-            --brand-coral: #f2665f;         /* Coral */
-            --brand-gold: #ffbf3f;          /* Tulip Tree */
-            --brand-cream: #f2c75c;         /* Cream Can */
+            /* The Brand Palette you provided */
+            --brand-magenta: #ec008c;
+            --brand-yellow: #fdb515;
+            --brand-coral: #f2665f;
+            --brand-gold: #ffbf3f;
+            --brand-cream: #f2c75c;
+            
+            /* Glassmorphism Variables */
+            --glass-bg: rgba(30, 41, 59, 0.7); /* Semi-transparent dark blue */
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --card-hover: rgba(51, 65, 85, 0.9);
         }
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--primary-color);
             color: var(--text-main);
             margin: 0;
             display: flex;
             height: 100vh;
             overflow: hidden;
+            
+            /* --- THE NEW BACKGROUND --- */
+            /* Deep Navy base with Brand Color Glows */
+            background-color: #0f172a;
+            background-image: 
+                radial-gradient(circle at 90% 10%, rgba(236, 0, 140, 0.25) 0%, transparent 40%), /* Magenta Glow Top Right */
+                radial-gradient(circle at 10% 90%, rgba(253, 181, 21, 0.15) 0%, transparent 40%); /* Yellow Glow Bottom Left */
+            background-repeat: no-repeat;
+            background-attachment: fixed;
         }
 
-        /* Sidebar */
+        /* Sidebar with Blur Effect */
         .sidebar {
             width: 280px;
-            background-color: var(--sidebar-color);
+            background: rgba(15, 23, 42, 0.85); /* Dark semi-transparent */
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             padding: 2rem;
             display: flex;
             flex-direction: column;
-            border-right: 1px solid rgba(255,255,255,0.05);
+            border-right: 1px solid var(--glass-border);
             flex-shrink: 0;
+            z-index: 10;
         }
 
         .logo-area {
@@ -74,21 +82,27 @@
         select, input {
             width: 100%;
             padding: 12px;
-            background: rgba(0,0,0,0.2);
-            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--glass-border);
             color: white;
             border-radius: 8px;
             outline: none;
             box-sizing: border-box; 
             font-size: 0.9rem;
+            transition: all 0.2s;
         }
-        select:focus, input:focus { border-color: var(--accent-color); }
+        select:focus, input:focus { 
+            border-color: var(--brand-magenta); 
+            background: rgba(255,255,255,0.1);
+        }
 
         /* Main Content */
         .main-content {
             flex: 1;
             padding: 2rem 3rem;
             overflow-y: auto;
+            position: relative;
+            z-index: 1;
         }
 
         .header {
@@ -97,10 +111,10 @@
             align-items: center;
             margin-bottom: 2rem;
             padding-bottom: 1rem;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid var(--glass-border);
         }
 
-        .welcome-text h1 { margin: 0; font-size: 2rem; font-weight: 600; }
+        .welcome-text h1 { margin: 0; font-size: 2rem; font-weight: 600; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
         .welcome-text p { margin: 5px 0 0; color: var(--text-muted); }
 
         /* Grid */
@@ -111,28 +125,33 @@
             padding-bottom: 3rem;
         }
 
-        /* Cards */
+        /* Cards with Glass Effect */
         .card {
-            background-color: var(--card-bg);
+            background: var(--glass-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--glass-border);
             border-radius: 12px;
             padding: 1.5rem;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             text-decoration: none;
             color: inherit;
             position: relative;
-            border: 1px solid rgba(255,255,255,0.05);
             display: flex;
             flex-direction: column;
             min-height: 160px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
+        
         .card:hover {
-            transform: translateY(-4px);
-            background-color: var(--card-hover);
-            border-color: var(--accent-color);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            transform: translateY(-5px);
+            background: var(--card-hover);
+            border-color: var(--brand-magenta);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3), 0 0 15px rgba(236, 0, 140, 0.2); /* Magenta Glow */
         }
 
         .card-top { display: flex; justify-content: space-between; margin-bottom: 1rem; }
+        
         .card-icon {
             width: 44px; height: 44px; border-radius: 10px;
             background: rgba(255,255,255,0.08);
@@ -141,41 +160,38 @@
         }
 
         /* --- BRANDED ICONS --- */
-        /* PowerBI -> Yellow Orange */
         .icon-powerbi { color: var(--brand-yellow); background: rgba(253, 181, 21, 0.15); }
-        
-        /* Tableau -> Coral */
         .icon-tableau { color: var(--brand-coral); background: rgba(242, 102, 95, 0.15); }
-        
-        /* ServiceNow/Others -> Cream/Gold */
         .icon-snow { color: var(--brand-cream); background: rgba(242, 199, 92, 0.15); } 
 
         .domain-tag {
             font-size: 0.7rem; padding: 4px 10px; border-radius: 20px;
-            background: rgba(236, 0, 140, 0.15); /* Low opacity Magenta */
-            color: var(--accent-color);
+            background: rgba(236, 0, 140, 0.2); 
+            color: #ff8cd0; /* Lighter magenta for text legibility */
             font-weight: 600; white-space: nowrap; max-width: 120px;
             overflow: hidden; text-overflow: ellipsis;
+            border: 1px solid rgba(236, 0, 140, 0.3);
         }
 
         .card-title { font-size: 1.1rem; font-weight: 600; margin-bottom: auto; padding-bottom: 1rem; }
-        .card-meta { font-size: 0.85rem; color: var(--text-muted); display: flex; align-items: center; gap: 8px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 0.75rem; }
+        .card-meta { font-size: 0.85rem; color: var(--text-muted); display: flex; align-items: center; gap: 8px; border-top: 1px solid var(--glass-border); padding-top: 0.75rem; }
 
-        /* Pinned Badge (Using Tulip Tree/Gold) */
+        /* Pinned Badge (Gold) */
         .pinned-badge {
             position: absolute; top: -10px; right: -10px;
-            background: var(--brand-gold); color: #333; /* Dark text for contrast on yellow */
+            background: var(--brand-gold); color: #0f172a;
             width: 24px; height: 24px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            font-size: 0.7rem; box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            font-size: 0.7rem; box-shadow: 0 4px 12px rgba(0,0,0,0.4);
             font-weight: bold;
+            z-index: 2;
         }
 
         /* Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--primary-color); }
-        ::-webkit-scrollbar-thumb { background: var(--card-hover); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--accent-color); }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--brand-magenta); }
 
     </style>
 </head>
@@ -183,7 +199,7 @@
 
     <div class="sidebar">
         <div class="logo-area">
-            <i class="fas fa-chart-network" style="color: var(--accent-color);"></i>
+            <i class="fas fa-chart-network" style="color: var(--brand-magenta);"></i>
             <span>Cockpit</span>
         </div>
 
@@ -218,7 +234,7 @@
                 <p>Quick access to pinned items. Use filters for more.</p>
             </div>
             <div style="text-align: right; color: var(--text-muted);">
-                <span id="countDisplay" style="color: var(--accent-color); font-weight: bold;">0</span> items visible
+                <span id="countDisplay" style="color: var(--brand-magenta); font-weight: bold;">0</span> items visible
             </div>
         </div>
 
@@ -227,10 +243,6 @@
     </div>
 
     <script>
-        /* DATA CONFIGURATION:
-           "pinned": true -> Shows on initial load
-           "pinned": false -> Only shows when searching/filtering
-        */
         const dashboardData = [
             { "pinned": true, "domain": "GO Ping", "region": "Global", "name": "GO Ping", "url": "https://app.powerbi.com/groups/me/reports/62c9e56a-563a-43a6-9cc2-cf2a67eb5e8f/4d46de5b5ee8d0c59671?ctid=c8eca3ca-1276-46d5-9d9d-a0f2a028920f&experience=power-bi" },
             { "pinned": true, "domain": "Global Site Analysis", "region": "Global", "name": "Global Site Analysis", "url": "https://tabi/#/site/GlobalServices/views/GlobalSiteAnalysisv1/GlobalSiteAnalysis?:iid=1" },
@@ -306,7 +318,6 @@
             { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "Traveller Details to Mexico | Brazil | SouthAfrica", "url": "https://tabi/#/site/GlobalServices/views/TravellerDetailstoMexicoBrazilSouthAfrica/TravellerDetailstoMexicoBrazilSouthAfrica?:iid=4" }
         ];
 
-        // --- ELEMENTS ---
         const grid = document.getElementById('gridContainer');
         const domainSelect = document.getElementById('domainSelect');
         const regionSelect = document.getElementById('regionSelect');
@@ -314,7 +325,6 @@
         const countDisplay = document.getElementById('countDisplay');
         const viewModeText = document.getElementById('viewModeText');
 
-        // --- RENDER FUNCTION ---
         function getIconData(item) {
             const lowerUrl = item.url.toLowerCase();
             if (lowerUrl.includes('powerbi')) return { icon: '<i class="fas fa-chart-bar"></i>', class: 'icon-powerbi' };
@@ -353,21 +363,17 @@
             viewModeText.innerText = isFiltered ? "Results" : "Pinned / Default";
         }
 
-        // --- FILTER LOGIC ---
         function filterDashboards() {
             const domainVal = domainSelect.value;
             const regionVal = regionSelect.value;
             const searchVal = searchInput.value.toLowerCase();
 
-            // Check if filters are effectively "empty"
             const isDefaultState = (domainVal === 'All' && regionVal === 'All' && searchVal === '');
 
             if (isDefaultState) {
-                // DEFAULT VIEW: Show only pinned items
                 const pinnedItems = dashboardData.filter(d => d.pinned);
                 renderCards(pinnedItems, false);
             } else {
-                // FILTER VIEW: Search entire database
                 const filtered = dashboardData.filter(item => {
                     const matchDomain = domainVal === 'All' || item.domain === domainVal;
                     const matchRegion = regionVal === 'All' || item.region === regionVal;
@@ -379,9 +385,7 @@
             }
         }
 
-        // --- INIT ---
         function init() {
-            // Populate Dropdowns
             const domains = [...new Set(dashboardData.map(d => d.domain))].sort();
             domains.forEach(d => {
                 const opt = document.createElement('option');
@@ -394,7 +398,6 @@
                 opt.value = r; opt.innerText = r; regionSelect.appendChild(opt);
             });
 
-            // Initial Load (Default View)
             filterDashboards();
         }
 
