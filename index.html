@@ -104,6 +104,30 @@
             padding: 10px;
         }
 
+        /* RESET BUTTON STYLE */
+        .reset-btn {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px dashed var(--glass-border);
+            color: var(--text-muted);
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .reset-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-color: var(--brand-magenta);
+        }
+
         /* Main Content */
         .main-content {
             flex: 1;
@@ -263,6 +287,10 @@
                 <option value="All">All Regions</option>
             </select>
         </div>
+
+        <button class="reset-btn" onclick="resetView()">
+            <i class="fas fa-undo-alt"></i> Reset View
+        </button>
         
         <div style="margin-top: auto; font-size: 0.8rem; color: var(--text-muted);">
             <i class="fas fa-info-circle"></i> Showing <span id="viewModeText">Pinned</span>
@@ -434,6 +462,14 @@
                 });
                 renderCards(filtered, true);
             }
+        }
+
+        // --- NEW RESET VIEW FUNCTION ---
+        function resetView() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('domainSelect').value = 'All';
+            document.getElementById('regionSelect').value = 'All';
+            filterDashboards();
         }
 
         function init() {
