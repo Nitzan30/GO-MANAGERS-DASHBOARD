@@ -8,19 +8,17 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
     <style>
-        /* --- 1. COLOR SETTINGS --- */
+        /* --- DESIGN SETTINGS --- */
         :root {
-            --primary-color: #0f172a;       /* Dark Navy Background */
-            --sidebar-color: #1e293b;       /* Slightly lighter sidebar */
-            --accent-color: #0ea5e9;        /* Bright Blue/Teal for highlights */
-            --text-main: #f8fafc;           /* White text */
-            --text-muted: #94a3b8;          /* Grey text */
-            --card-bg: #334155;             /* Card background */
-            --card-hover: #475569;          /* Card hover state */
-            --scrollbar-thumb: #475569;
+            --primary-color: #0f172a;       /* Dark Navy */
+            --sidebar-color: #1e293b;       /* Sidebar */
+            --accent-color: #0ea5e9;        /* Bright Blue/Teal */
+            --text-main: #f8fafc;           /* White */
+            --text-muted: #94a3b8;          /* Grey */
+            --card-bg: #334155;             /* Card BG */
+            --card-hover: #475569;          /* Card Hover */
         }
 
-        /* --- 2. LAYOUT & DESIGN --- */
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--primary-color);
@@ -31,7 +29,7 @@
             overflow: hidden;
         }
 
-        /* Sidebar Styling */
+        /* Sidebar */
         .sidebar {
             width: 280px;
             background-color: var(--sidebar-color);
@@ -52,15 +50,7 @@
             gap: 12px;
         }
 
-        .logo-icon {
-            color: var(--accent-color);
-            font-size: 1.8rem;
-        }
-
-        .filter-group {
-            margin-bottom: 1.5rem;
-        }
-
+        .filter-group { margin-bottom: 1.5rem; }
         .filter-label {
             font-size: 0.75rem;
             text-transform: uppercase;
@@ -80,19 +70,14 @@
             outline: none;
             box-sizing: border-box; 
             font-size: 0.9rem;
-            transition: border-color 0.2s;
         }
+        select:focus, input:focus { border-color: var(--accent-color); }
 
-        select:focus, input:focus {
-            border-color: var(--accent-color);
-        }
-
-        /* Main Content Styling */
+        /* Main Content */
         .main-content {
             flex: 1;
             padding: 2rem 3rem;
             overflow-y: auto;
-            position: relative;
         }
 
         .header {
@@ -105,9 +90,9 @@
         }
 
         .welcome-text h1 { margin: 0; font-size: 2rem; font-weight: 600; }
-        .welcome-text p { margin: 5px 0 0; color: var(--text-muted); font-size: 0.95rem; }
+        .welcome-text p { margin: 5px 0 0; color: var(--text-muted); }
 
-        /* Grid System */
+        /* Grid */
         .dashboard-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -115,7 +100,7 @@
             padding-bottom: 3rem;
         }
 
-        /* Card Styling */
+        /* Cards */
         .card {
             background-color: var(--card-bg);
             border-radius: 12px;
@@ -129,7 +114,6 @@
             flex-direction: column;
             min-height: 160px;
         }
-
         .card:hover {
             transform: translateY(-4px);
             background-color: var(--card-hover);
@@ -137,65 +121,37 @@
             box-shadow: 0 10px 25px rgba(0,0,0,0.2);
         }
 
-        .card-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 1rem;
-        }
-
+        .card-top { display: flex; justify-content: space-between; margin-bottom: 1rem; }
         .card-icon {
-            width: 44px;
-            height: 44px;
-            border-radius: 10px;
+            width: 44px; height: 44px; border-radius: 10px;
             background: rgba(255,255,255,0.08);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             font-size: 1.4rem;
         }
 
-        /* Dynamic Colors for specific platform icons */
+        /* Specific Icon Colors */
         .icon-powerbi { color: #F2C811; background: rgba(242, 200, 17, 0.15); }
         .icon-tableau { color: #E97627; background: rgba(233, 118, 39, 0.15); }
         .icon-snow { color: #81B5A1; background: rgba(129, 181, 161, 0.15); } 
 
         .domain-tag {
-            font-size: 0.7rem;
-            padding: 4px 10px;
-            border-radius: 20px;
-            background: rgba(14, 165, 233, 0.15);
-            color: var(--accent-color);
-            font-weight: 600;
-            white-space: nowrap;
-            max-width: 120px;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            font-size: 0.7rem; padding: 4px 10px; border-radius: 20px;
+            background: rgba(14, 165, 233, 0.15); color: var(--accent-color);
+            font-weight: 600; white-space: nowrap; max-width: 120px;
+            overflow: hidden; text-overflow: ellipsis;
         }
 
-        .card-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            line-height: 1.4;
-            margin-bottom: auto; /* Pushes content below to bottom */
-            padding-bottom: 1rem;
-        }
+        .card-title { font-size: 1.1rem; font-weight: 600; margin-bottom: auto; padding-bottom: 1rem; }
+        .card-meta { font-size: 0.85rem; color: var(--text-muted); display: flex; align-items: center; gap: 8px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 0.75rem; }
 
-        .card-meta {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border-top: 1px solid rgba(255,255,255,0.05);
-            padding-top: 0.75rem;
+        /* Pinned Badge */
+        .pinned-badge {
+            position: absolute; top: -10px; right: -10px;
+            background: var(--accent-color); color: white;
+            width: 24px; height: 24px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.7rem; box-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
-
-        /* Scrollbar styling */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--primary-color); }
-        ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
 
     </style>
 </head>
@@ -203,38 +159,42 @@
 
     <div class="sidebar">
         <div class="logo-area">
-            <i class="fas fa-layer-group logo-icon"></i>
-            <span>Manager Cockpit</span>
+            <i class="fas fa-layer-group" style="color: var(--accent-color);"></i>
+            <span>Cockpit</span>
         </div>
 
         <div class="filter-group">
             <div class="filter-label">Search</div>
-            <input type="text" id="searchInput" placeholder="Search by name..." onkeyup="filterDashboards()">
+            <input type="text" id="searchInput" placeholder="Find dashboard..." onkeyup="filterDashboards()">
         </div>
 
         <div class="filter-group">
-            <div class="filter-label">Filter by Domain</div>
+            <div class="filter-label">Domain</div>
             <select id="domainSelect" onchange="filterDashboards()">
                 <option value="All">All Domains</option>
             </select>
         </div>
 
         <div class="filter-group">
-            <div class="filter-label">Filter by Region</div>
+            <div class="filter-label">Region</div>
             <select id="regionSelect" onchange="filterDashboards()">
                 <option value="All">All Regions</option>
             </select>
+        </div>
+        
+        <div style="margin-top: auto; font-size: 0.8rem; color: var(--text-muted);">
+            <i class="fas fa-info-circle"></i> Showing <span id="viewModeText">Pinned</span>
         </div>
     </div>
 
     <div class="main-content">
         <div class="header">
             <div class="welcome-text">
-                <h1>Overview</h1>
-                <p>Access your global, regional, and domain-specific insights.</p>
+                <h1>Executive Overview</h1>
+                <p>Quick access to pinned items. Use filters for more.</p>
             </div>
             <div style="text-align: right; color: var(--text-muted);">
-                <span id="countDisplay" style="color: var(--accent-color); font-weight: bold;">0</span> Dashboards Found
+                <span id="countDisplay" style="color: var(--accent-color); font-weight: bold;">0</span> items visible
             </div>
         </div>
 
@@ -243,491 +203,119 @@
     </div>
 
     <script>
-        // --- 1. FULL DATA DATASET (73 ITEMS) ---
+        /* DATA CONFIGURATION:
+           I have added a property "pinned: true" to the first 8 items.
+           Change "pinned: true" to "pinned: false" (or vice versa) to customize your default view.
+        */
         const dashboardData = [
-    {
-        "domain": "GO Ping",
-        "region": "Global",
-        "name": "GO Ping",
-        "url": "https://app.powerbi.com/groups/me/reports/62c9e56a-563a-43a6-9cc2-cf2a67eb5e8f/4d46de5b5ee8d0c59671?ctid=c8eca3ca-1276-46d5-9d9d-a0f2a028920f&experience=power-bi"
-    },
-    {
-        "domain": "Global Site Analysis",
-        "region": "Global",
-        "name": "Global Site Analysis",
-        "url": "https://tabi/#/site/GlobalServices/views/GlobalSiteAnalysisv1/GlobalSiteAnalysis?:iid=1"
-    },
-    {
-        "domain": "SNOW DASH",
-        "region": "Global",
-        "name": "SNOW DASH",
-        "url": "https://amdocsprodmain.service-now.com/nav_to.do?uri=%2F$pa_dashboard.do%3Fsysparm_dashboard%3D0e6b3803db49e01492f4d8c2f396191a%26sysparm_tab%3D428b7c03db49e01492f4d8c2f39619a3%26sysparm_cancelable%3Dtrue%26sysparm_editable%3Dtrue%26sysparm_active_panel%3DquickLayoutSideContent"
-    },
-    {
-        "domain": "FlexSeat",
-        "region": "Global",
-        "name": "FlexSeat report",
-        "url": "https://app.powerbi.com/groups/me/apps/a9a45472-96d0-4062-84fb-30c1dcdf8dfd/reports/69daf43d-df81-4b53-a15e-9e49968f3134/ReportSectione749003ebae51abf2453?experience=power-bi"
-    },
-    {
-        "domain": "Attendance",
-        "region": "Israel",
-        "name": "Amdocs Park Attendance",
-        "url": "https://tabi/#/site/GlobalServices/views/AmdocsParkAttendanceDataLake/AmdocsParkAttendance?:iid=1"
-    },
-    {
-        "domain": "Attendance",
-        "region": "Israel",
-        "name": "Attendance Evenings Stay & Exits",
-        "url": "https://tabi/#/site/GlobalServices/views/AttendanceEveningsStayExits/AttendanceEveningsStay?:iid=1"
-    },
-    {
-        "domain": "Attendance",
-        "region": "Cyprus",
-        "name": "Cyprus Attendance",
-        "url": "https://tabi/#/site/GlobalServices/views/CyprusAttendance/CyprusAttendance?:iid=2"
-    },
-    {
-        "domain": "Attendance",
-        "region": "Israel",
-        "name": "Israel Attendance",
-        "url": "https://tabi/#/site/GlobalServices/views/IsraelAttendance/RegionalAttendance?:iid=2"
-    },
-    {
-        "domain": "Attendance",
-        "region": "Israel",
-        "name": "Israel Attendance Overview",
-        "url": "https://tabi/#/site/GlobalServices/views/IsraelAttendanceOverview/IsraelAttendanceOverview?:iid=4"
-    },
-    {
-        "domain": "Attendance",
-        "region": "Israel",
-        "name": "More than 11 Hours Present in the Office",
-        "url": "https://tabi/#/site/GlobalServices/views/Morethan11HoursPresentintheOffice/Morethan11HoursPresentintheOffice?:iid=3"
-    },
-    {
-        "domain": "Attendance",
-        "region": "Israel",
-        "name": "Nazareth Attendance",
-        "url": "https://tabi/#/site/GlobalServices/views/NazarethAttendance/NazarethAttendance?:iid=1"
-    },
-    {
-        "domain": "Attendance",
-        "region": "Israel",
-        "name": "Shderot Attendance",
-        "url": "https://tabi/#/site/GlobalServices/views/ShderotAttendance/ShderotAttendance?:iid=5"
-    },
-    {
-        "domain": "Attendance",
-        "region": "Global",
-        "name": "Locations Employees Dashboard",
-        "url": "https://tabi/#/site/GlobalServices/views/LocationsEmployeesDashboard_16795840394750/LocationsEmployeesDashboard"
-    },
-    {
-        "domain": "Attendance",
-        "region": "Israel",
-        "name": "Live Attendance Dashboard",
-        "url": "https://tabi/#/site/GlobalServices/views/LiveAttendanceDashboard/LiveIsraelAttendance"
-    },
-    {
-        "domain": "Attendance",
-        "region": "APAC",
-        "name": "Live Attendance Dashboard",
-        "url": "https://tabi/#/site/GlobalServices/views/LiveAttendanceDashboard/LivePhilippinesAttendance"
-    },
-    {
-        "domain": "Attendance",
-        "region": "N. America",
-        "name": "Live Attendance Dashboard",
-        "url": "https://tabi/#/site/GlobalServices/views/LiveAttendanceDashboard/LiveGuadalajaraCorporativoGaleriasAttendance"
-    },
-    {
-        "domain": "Attendance",
-        "region": "N. America",
-        "name": "Flex Seat v/s Attendance Analysis",
-        "url": "https://tabi/#/site/GlobalServices/views/FlexSeatvsAttendanceAnalysis/FlexSeatvsAttendanceAnalysis"
-    },
-    {
-        "domain": "Attendance",
-        "region": "India",
-        "name": "India Live Attendance Summary",
-        "url": "https://tabi/#/site/GlobalServices/views/IndiaLiveAttendanceSummary/IndiaLiveAttendanceSummary?:iid=2"
-    },
-    {
-        "domain": "EHS, Security",
-        "region": "Global",
-        "name": "EHS Criticality Buildings Summary",
-        "url": "https://tabi/#/site/GlobalServices/views/EHSCriticalityBuildingsSummary/EHSCriticalityBuildingsSummary"
-    },
-    {
-        "domain": "EHS, Security",
-        "region": "Israel",
-        "name": "Security Expert Badges Dashboard",
-        "url": "https://tabi/#/site/GlobalServices/views/SecurityExpertBadgesDashboard/SecurityExpertBadgesDashboard?:iid=1"
-    },
-    {
-        "domain": "EHS, Security",
-        "region": "Global",
-        "name": "Security Readiness Buildings Summary",
-        "url": "https://tabi/#/site/GlobalServices/views/SecurityReadinessBuildingsSummaryProd/SecurityReadinessBuildingsSummary?:iid=1"
-    },
-    {
-        "domain": "EHS, Security",
-        "region": "India",
-        "name": "Pune Swipe Details",
-        "url": "https://tabi/#/site/GlobalServices/views/PuneSwipeDetails/PuneSwipeDetails"
-    },
-    {
-        "domain": "Travel & Immigration",
-        "region": "Global",
-        "name": "Active Relocation",
-        "url": "https://tabi/#/site/GlobalServices/views/ActiveRelocation/ActiveRelocation?:iid=1"
-    },
-    {
-        "domain": "Travel & Immigration",
-        "region": "Global",
-        "name": "TIR MASTER DASHBORD",
-        "url": "https://tabi/#/site/GlobalServices/views/TIRDashboard/TIRDashboard?:iid=1"
-    },
-    {
-        "domain": "Travel & Immigration",
-        "region": "Global",
-        "name": "Global Relocation Spend",
-        "url": "https://tabi/#/site/GlobalServices/views/GlobalRelocationSpend/GlobalRelocationSpend?:iid=1"
-    },
-    {
-        "domain": "Travel & Immigration",
-        "region": "Global",
-        "name": "Immigration Budget",
-        "url": "https://tabi/#/site/GlobalServices/views/ImmigrationBudget/ImmigrationBudget?:iid=2"
-    },
-    {
-        "domain": "Travel & Immigration",
-        "region": "Global",
-        "name": "Immigration Calculator",
-        "url": "https://tabi/#/site/GlobalServices/views/ImmigrationCalculator/ImmigrationCalculator?:iid=2"
-    },
-    {
-        "domain": "Travel & Immigration",
-        "region": "Global",
-        "name": "India & APAC Business VISA Dashboard",
-        "url": "https://tabi/#/site/GlobalServices/views/IndiaAPACBusinessVISADashboard/IndiaAPACBusinessVISADashboard?:iid=1"
-    },
-    {
-        "domain": "Travel & Immigration",
-        "region": "Global",
-        "name": "Lumpsum vs Cargo Analysis",
-        "url": "https://tabi/#/site/GlobalServices/views/LumpsumvsCargoAnalysis/LumpsumvsCargoAnalysis?:iid=2"
-    },
-    {
-        "domain": "Travel & Immigration",
-        "region": "Global",
-        "name": "Traffic Light",
-        "url": "https://tabi/#/site/GlobalServices/views/TrafficLight/TrafficLight?:iid=2"
-    },
-    {
-        "domain": "Travel & Immigration",
-        "region": "Global",
-        "name": "Work Permit Process Steps KPIs",
-        "url": "https://tabi/#/site/GlobalServices/views/WorkPermitProcessStepsKPIs/WorkPermitProcessStepsKPIs?:iid=3"
-    },
-    {
-        "domain": "Travel & Immigration",
-        "region": "Global",
-        "name": "TIR MASTER DASHBORD",
-        "url": "https://tabi/#/site/GlobalServices/views/TIRDashboard/TIRDashboard?:iid=1"
-    },
-    {
-        "domain": "Travel & Immigration",
-        "region": "Global",
-        "name": "All Plan Travel Details",
-        "url": "https://tabi/#/site/GlobalServices/views/AllPlanTravelDetails/AllPlanTravelDetails?:iid=4"
-    },
-    {
-        "domain": "Real Estate & Facilities",
-        "region": "Israel",
-        "name": "Amdocs Park Facility Tickets",
-        "url": "https://tabi/#/site/GlobalServices/views/FacilitiesTicketsNew/FacilitiesTickets?:iid=5"
-    },
-    {
-        "domain": "Real Estate & Facilities",
-        "region": "Global",
-        "name": "Building & Contract Details",
-        "url": "https://tabi/#/site/GlobalServices/views/BuildingContractDetails/RealEstateSummary?:iid=6"
-    },
-    {
-        "domain": "Real Estate & Facilities",
-        "region": "Global",
-        "name": "Facilities Tickets",
-        "url": "https://tabi/#/site/GlobalServices/views/FacilitiesTickets/FacilitiesTickets_1?:iid=3"
-    },
-    {
-        "domain": "Real Estate & Facilities",
-        "region": "Global",
-        "name": "Global Site Analysis",
-        "url": "https://tabi/#/site/GlobalServices/views/GlobalSiteAnalysisv1/GlobalSiteAnalysis"
-    },
-    {
-        "domain": "Real Estate & Facilities",
-        "region": "Israel",
-        "name": "Real Estate and Facilities Analysis IL",
-        "url": "https://tabi/#/site/GlobalServices/views/RealEstateandFacilitiesAnalysisIL/MainILSummary?:iid=4"
-    },
-    {
-        "domain": "Real Estate & Facilities",
-        "region": "Israel",
-        "name": "Space Management Dashboard",
-        "url": "https://tabi/#/site/GlobalServices/views/SpaceManagementDashboard/SpaceManagementDashboard?:iid=7"
-    },
-    {
-        "domain": "Transportation",
-        "region": "Israel",
-        "name": "Amdocs Fleet Monthly",
-        "url": "https://tabi/#/site/GlobalServices/views/AmdocsFleetMonthly/TotalQuantities?:iid=9"
-    },
-    {
-        "domain": "Transportation",
-        "region": "Israel",
-        "name": "Bubbles Service Summary",
-        "url": "https://tabi/#/site/GlobalServices/views/BubblesServiceSummary/BubblesServiceSummary?:iid=8"
-    },
-    {
-        "domain": "Transportation",
-        "region": "Israel",
-        "name": "Car Accidents Summary",
-        "url": "https://tabi/#/site/GlobalServices/views/CarAccidentsSummary/AccidentsSummary?:iid=10"
-    },
-    {
-        "domain": "Transportation",
-        "region": "Israel",
-        "name": "Car Damages Cost Analysis",
-        "url": "https://tabi/#/site/GlobalServices/views/CarDamagesCostAnalysis/CarDamagesCostAnalysisLocationVendor?:iid=9"
-    },
-    {
-        "domain": "Transportation",
-        "region": "Israel",
-        "name": "Car Wash",
-        "url": "https://tabi/#/site/GlobalServices/views/CarWash/Summary?:iid=3"
-    },
-    {
-        "domain": "Transportation",
-        "region": "Israel",
-        "name": "Gas Consumption Summary",
-        "url": "https://tabi/#/site/GlobalServices/views/GasConsumptionSummary/GasConsumptionSummary?:iid=4"
-    },
-    {
-        "domain": "Transportation",
-        "region": "Israel",
-        "name": "IL Shuttles",
-        "url": "https://tabi/#/site/GlobalServices/views/ILShuttles/ShuttlesSummary?:iid=3"
-    },
-    {
-        "domain": "Transportation",
-        "region": "Israel",
-        "name": "Invoices",
-        "url": "https://tabi/#/site/GlobalServices/views/Invoices/PaymentDelaySLA?:iid=10"
-    },
-    {
-        "domain": "Transportation",
-        "region": "Israel",
-        "name": "KML Consumption",
-        "url": "https://tabi/#/site/GlobalServices/views/KMLConsumption/KMLConsumption?:iid=8"
-    },
-    {
-        "domain": "Transportation",
-        "region": "Israel",
-        "name": "Parking Area Summary",
-        "url": "https://tabi/#/site/GlobalServices/views/ParkingAreaSummary_16987440988720/ParkingAreaSummary?:iid=11"
-    },
-    {
-        "domain": "Transportation",
-        "region": "Israel",
-        "name": "Pledged",
-        "url": "https://tabi/#/site/GlobalServices/views/Pleged/PledgeStatusSummary?:iid=11"
-    },
-    {
-        "domain": "Transportation",
-        "region": "India",
-        "name": "Routematic Analysis",
-        "url": "https://tabi/#/site/GlobalServices/views/RoutematicAnalysis_17365048521050/RoutematicAnalysis?:iid=5"
-    },
-    {
-        "domain": "Transportation",
-        "region": "Israel",
-        "name": "Transportation Budget",
-        "url": "https://tabi/#/site/GlobalServices/views/TransportationBudget/TransportationBudget?:iid=4"
-    },
-    {
-        "domain": "Transportation",
-        "region": "Israel",
-        "name": "Tyre Analysis",
-        "url": "https://tabi/#/site/GlobalServices/views/TyreAnalysis/TyreAnalysis?:iid=9"
-    },
-    {
-        "domain": "Culinary",
-        "region": "India",
-        "name": "DigiCafe Dashboard",
-        "url": "https://tabi/#/site/GlobalServices/views/DIgiCafeDashboard/DigiCafeDashboard?:iid=3"
-    },
-    {
-        "domain": "Culinary",
-        "region": "India",
-        "name": "INDIA Cafe Survey Analysis",
-        "url": "https://tabi/#/site/GlobalServices/views/INDIACafeSurveyAnalysis/INDIACafeSurveyAnalysis?:iid=4"
-    },
-    {
-        "domain": "Culinary",
-        "region": "Israel",
-        "name": "CIBUS",
-        "url": "https://tabi/#/site/GlobalServices/views/CIBUSDashboard/CIBUS?:iid=1"
-    },
-    {
-        "domain": "Culinary",
-        "region": "Israel",
-        "name": "Coffee Machines",
-        "url": "https://tabi/#/site/GlobalServices/views/CoffeeMachinesDataLake/MainDash?:iid=6"
-    },
-    {
-        "domain": "Culinary",
-        "region": "Israel",
-        "name": "Prediction Quantity Analysis - Amdocs Park",
-        "url": "https://tabi/#/site/GlobalServices/views/PredictionQuantityAnalysis-AmdocsPark/AmdocsParkWeeklyPredictionQuantityAnalysis?:iid=7"
-    },
-    {
-        "domain": "Travel & Immigration",
-        "region": "Global",
-        "name": "AMEX_BCD",
-        "url": "https://tabi/#/site/GlobalServices/views/AMEX_BCD/Summary"
-    },
-    {
-        "domain": "Travel & Immigration",
-        "region": "Global",
-        "name": "Business Travel Daily Reports",
-        "url": "https://tabi/#/site/GlobalServices/views/BusinessTravelDailyReports/BusinessTravelDailyReports"
-    },
-    {
-        "domain": "Travel & Immigration",
-        "region": "Global",
-        "name": "Business Trips Monitor",
-        "url": "https://tabi/#/site/GlobalServices/views/BusinessTripsMonitor/SummaryPlannedTrips?:iid=12"
-    },
-    {
-        "domain": "Travel & Immigration",
-        "region": "Global",
-        "name": "Changes",
-        "url": "https://tabi/#/site/GlobalServices/views/Changes/ChangesSummary?:iid=6"
-    },
-    {
-        "domain": "Travel & Immigration",
-        "region": "Global",
-        "name": "Employee Travel Details",
-        "url": "https://tabi/#/site/GlobalServices/views/EmployeeTravelDetails/EmployeeTravelDetails?:iid=5"
-    },
-    {
-        "domain": "Travel & Immigration",
-        "region": "Global",
-        "name": "Group Trip to Same Direction",
-        "url": "https://tabi/#/site/GlobalServices/views/GroupTriptoSameDirection/GroupTriptoSameDirection?:iid=5"
-    },
-    {
-        "domain": "Travel & Immigration",
-        "region": "Global",
-        "name": "GS Travel for Monthly deck",
-        "url": "https://tabi/#/site/GlobalServices/views/GSTravelforMonthlydeck/GSTravel?:iid=7"
-    },
-    {
-        "domain": "Travel & Immigration",
-        "region": "Global",
-        "name": "High Cost Trips",
-        "url": "https://tabi/#/site/GlobalServices/views/HighCostTrips/HighCostTrips?:iid=6"
-    },
-    {
-        "domain": "Travel & Immigration",
-        "region": "Global",
-        "name": "ISRAEL Employees Travel Details",
-        "url": "https://tabi/#/site/GlobalServices/views/ISRAELEmployeesTravelDetails/ISRAELEmployeesTravelDetails?:iid=6"
-    },
-    {
-        "domain": "Travel & Immigration",
-        "region": "Global",
-        "name": "Israeli Reservists Traveling Details",
-        "url": "https://tabi/#/site/GlobalServices/views/IsraeliReservistsTravelingDetails/IsraeliReservistsTravelingDetails?:iid=10"
-    },
-    {
-        "domain": "Travel & Immigration",
-        "region": "Global",
-        "name": "OPEX Summary",
-        "url": "https://tabi/#/site/GlobalServices/views/OPEXSummary/OPEXSummary"
-    },
-    {
-        "domain": "Travel & Immigration",
-        "region": "Global",
-        "name": "TIR Dashboard",
-        "url": "https://tabi/#/site/GlobalServices/views/TIRDashboard/TIRDashboard?:iid=9"
-    },
-    {
-        "domain": "Travel & Immigration",
-        "region": "Global",
-        "name": "Travel KPI`s",
-        "url": "https://tabi/#/site/GlobalServices/views/TravelKPIs/Main?:iid=13"
-    },
-    {
-        "domain": "Travel & Immigration",
-        "region": "Global",
-        "name": "Travel Warning Dashboard",
-        "url": "https://tabi/#/site/GlobalServices/views/TravelWarningDashboard/TravellingFromIsrael?:iid=12"
-    },
-    {
-        "domain": "Travel & Immigration",
-        "region": "Global",
-        "name": "Traveller Details to Mexico | Brazil | SouthAfrica",
-        "url": "https://tabi/#/site/GlobalServices/views/TravellerDetailstoMexicoBrazilSouthAfrica/TravellerDetailstoMexicoBrazilSouthAfrica?:iid=4"
-    }
-];
+            { "pinned": true, "domain": "GO Ping", "region": "Global", "name": "GO Ping", "url": "https://app.powerbi.com/groups/me/reports/62c9e56a-563a-43a6-9cc2-cf2a67eb5e8f/4d46de5b5ee8d0c59671?ctid=c8eca3ca-1276-46d5-9d9d-a0f2a028920f&experience=power-bi" },
+            { "pinned": true, "domain": "Global Site Analysis", "region": "Global", "name": "Global Site Analysis", "url": "https://tabi/#/site/GlobalServices/views/GlobalSiteAnalysisv1/GlobalSiteAnalysis?:iid=1" },
+            { "pinned": true, "domain": "SNOW DASH", "region": "Global", "name": "SNOW DASH", "url": "https://amdocsprodmain.service-now.com/nav_to.do?uri=%2F$pa_dashboard.do%3Fsysparm_dashboard%3D0e6b3803db49e01492f4d8c2f396191a%26sysparm_tab%3D428b7c03db49e01492f4d8c2f39619a3%26sysparm_cancelable%3Dtrue%26sysparm_editable%3Dtrue%26sysparm_active_panel%3DquickLayoutSideContent" },
+            { "pinned": true, "domain": "FlexSeat", "region": "Global", "name": "FlexSeat report", "url": "https://app.powerbi.com/groups/me/apps/a9a45472-96d0-4062-84fb-30c1dcdf8dfd/reports/69daf43d-df81-4b53-a15e-9e49968f3134/ReportSectione749003ebae51abf2453?experience=power-bi" },
+            { "pinned": false, "domain": "Attendance", "region": "Israel", "name": "Amdocs Park Attendance", "url": "https://tabi/#/site/GlobalServices/views/AmdocsParkAttendanceDataLake/AmdocsParkAttendance?:iid=1" },
+            { "pinned": false, "domain": "Attendance", "region": "Israel", "name": "Attendance Evenings Stay & Exits", "url": "https://tabi/#/site/GlobalServices/views/AttendanceEveningsStayExits/AttendanceEveningsStay?:iid=1" },
+            { "pinned": false, "domain": "Attendance", "region": "Cyprus", "name": "Cyprus Attendance", "url": "https://tabi/#/site/GlobalServices/views/CyprusAttendance/CyprusAttendance?:iid=2" },
+            { "pinned": false, "domain": "Attendance", "region": "Israel", "name": "Israel Attendance", "url": "https://tabi/#/site/GlobalServices/views/IsraelAttendance/RegionalAttendance?:iid=2" },
+            { "pinned": false, "domain": "Attendance", "region": "Israel", "name": "Israel Attendance Overview", "url": "https://tabi/#/site/GlobalServices/views/IsraelAttendanceOverview/IsraelAttendanceOverview?:iid=4" },
+            { "pinned": false, "domain": "Attendance", "region": "Israel", "name": "More than 11 Hours Present in the Office", "url": "https://tabi/#/site/GlobalServices/views/Morethan11HoursPresentintheOffice/Morethan11HoursPresentintheOffice?:iid=3" },
+            { "pinned": false, "domain": "Attendance", "region": "Israel", "name": "Nazareth Attendance", "url": "https://tabi/#/site/GlobalServices/views/NazarethAttendance/NazarethAttendance?:iid=1" },
+            { "pinned": false, "domain": "Attendance", "region": "Israel", "name": "Shderot Attendance", "url": "https://tabi/#/site/GlobalServices/views/ShderotAttendance/ShderotAttendance?:iid=5" },
+            { "pinned": false, "domain": "Attendance", "region": "Global", "name": "Locations Employees Dashboard", "url": "https://tabi/#/site/GlobalServices/views/LocationsEmployeesDashboard_16795840394750/LocationsEmployeesDashboard" },
+            { "pinned": false, "domain": "Attendance", "region": "Israel", "name": "Live Attendance Dashboard", "url": "https://tabi/#/site/GlobalServices/views/LiveAttendanceDashboard/LiveIsraelAttendance" },
+            { "pinned": false, "domain": "Attendance", "region": "APAC", "name": "Live Attendance Dashboard", "url": "https://tabi/#/site/GlobalServices/views/LiveAttendanceDashboard/LivePhilippinesAttendance" },
+            { "pinned": false, "domain": "Attendance", "region": "N. America", "name": "Live Attendance Dashboard", "url": "https://tabi/#/site/GlobalServices/views/LiveAttendanceDashboard/LiveGuadalajaraCorporativoGaleriasAttendance" },
+            { "pinned": false, "domain": "Attendance", "region": "N. America", "name": "Flex Seat v/s Attendance Analysis", "url": "https://tabi/#/site/GlobalServices/views/FlexSeatvsAttendanceAnalysis/FlexSeatvsAttendanceAnalysis" },
+            { "pinned": false, "domain": "Attendance", "region": "India", "name": "India Live Attendance Summary", "url": "https://tabi/#/site/GlobalServices/views/IndiaLiveAttendanceSummary/IndiaLiveAttendanceSummary?:iid=2" },
+            { "pinned": false, "domain": "EHS, Security", "region": "Global", "name": "EHS Criticality Buildings Summary", "url": "https://tabi/#/site/GlobalServices/views/EHSCriticalityBuildingsSummary/EHSCriticalityBuildingsSummary" },
+            { "pinned": false, "domain": "EHS, Security", "region": "Israel", "name": "Security Expert Badges Dashboard", "url": "https://tabi/#/site/GlobalServices/views/SecurityExpertBadgesDashboard/SecurityExpertBadgesDashboard?:iid=1" },
+            { "pinned": false, "domain": "EHS, Security", "region": "Global", "name": "Security Readiness Buildings Summary", "url": "https://tabi/#/site/GlobalServices/views/SecurityReadinessBuildingsSummaryProd/SecurityReadinessBuildingsSummary?:iid=1" },
+            { "pinned": false, "domain": "EHS, Security", "region": "India", "name": "Pune Swipe Details", "url": "https://tabi/#/site/GlobalServices/views/PuneSwipeDetails/PuneSwipeDetails" },
+            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "Active Relocation", "url": "https://tabi/#/site/GlobalServices/views/ActiveRelocation/ActiveRelocation?:iid=1" },
+            { "pinned": true, "domain": "Travel & Immigration", "region": "Global", "name": "TIR MASTER DASHBORD", "url": "https://tabi/#/site/GlobalServices/views/TIRDashboard/TIRDashboard?:iid=1" },
+            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "Global Relocation Spend", "url": "https://tabi/#/site/GlobalServices/views/GlobalRelocationSpend/GlobalRelocationSpend?:iid=1" },
+            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "Immigration Budget", "url": "https://tabi/#/site/GlobalServices/views/ImmigrationBudget/ImmigrationBudget?:iid=2" },
+            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "Immigration Calculator", "url": "https://tabi/#/site/GlobalServices/views/ImmigrationCalculator/ImmigrationCalculator?:iid=2" },
+            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "India & APAC Business VISA Dashboard", "url": "https://tabi/#/site/GlobalServices/views/IndiaAPACBusinessVISADashboard/IndiaAPACBusinessVISADashboard?:iid=1" },
+            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "Lumpsum vs Cargo Analysis", "url": "https://tabi/#/site/GlobalServices/views/LumpsumvsCargoAnalysis/LumpsumvsCargoAnalysis?:iid=2" },
+            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "Traffic Light", "url": "https://tabi/#/site/GlobalServices/views/TrafficLight/TrafficLight?:iid=2" },
+            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "Work Permit Process Steps KPIs", "url": "https://tabi/#/site/GlobalServices/views/WorkPermitProcessStepsKPIs/WorkPermitProcessStepsKPIs?:iid=3" },
+            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "All Plan Travel Details", "url": "https://tabi/#/site/GlobalServices/views/AllPlanTravelDetails/AllPlanTravelDetails?:iid=4" },
+            { "pinned": false, "domain": "Real Estate & Facilities", "region": "Israel", "name": "Amdocs Park Facility Tickets", "url": "https://tabi/#/site/GlobalServices/views/FacilitiesTicketsNew/FacilitiesTickets?:iid=5" },
+            { "pinned": false, "domain": "Real Estate & Facilities", "region": "Global", "name": "Building & Contract Details", "url": "https://tabi/#/site/GlobalServices/views/BuildingContractDetails/RealEstateSummary?:iid=6" },
+            { "pinned": false, "domain": "Real Estate & Facilities", "region": "Global", "name": "Facilities Tickets", "url": "https://tabi/#/site/GlobalServices/views/FacilitiesTickets/FacilitiesTickets_1?:iid=3" },
+            { "pinned": false, "domain": "Real Estate & Facilities", "region": "Global", "name": "Global Site Analysis", "url": "https://tabi/#/site/GlobalServices/views/GlobalSiteAnalysisv1/GlobalSiteAnalysis" },
+            { "pinned": false, "domain": "Real Estate & Facilities", "region": "Israel", "name": "Real Estate and Facilities Analysis IL", "url": "https://tabi/#/site/GlobalServices/views/RealEstateandFacilitiesAnalysisIL/MainILSummary?:iid=4" },
+            { "pinned": false, "domain": "Real Estate & Facilities", "region": "Israel", "name": "Space Management Dashboard", "url": "https://tabi/#/site/GlobalServices/views/SpaceManagementDashboard/SpaceManagementDashboard?:iid=7" },
+            { "pinned": false, "domain": "Transportation", "region": "Israel", "name": "Amdocs Fleet Monthly", "url": "https://tabi/#/site/GlobalServices/views/AmdocsFleetMonthly/TotalQuantities?:iid=9" },
+            { "pinned": false, "domain": "Transportation", "region": "Israel", "name": "Bubbles Service Summary", "url": "https://tabi/#/site/GlobalServices/views/BubblesServiceSummary/BubblesServiceSummary?:iid=8" },
+            { "pinned": false, "domain": "Transportation", "region": "Israel", "name": "Car Accidents Summary", "url": "https://tabi/#/site/GlobalServices/views/CarAccidentsSummary/AccidentsSummary?:iid=10" },
+            { "pinned": false, "domain": "Transportation", "region": "Israel", "name": "Car Damages Cost Analysis", "url": "https://tabi/#/site/GlobalServices/views/CarDamagesCostAnalysis/CarDamagesCostAnalysisLocationVendor?:iid=9" },
+            { "pinned": false, "domain": "Transportation", "region": "Israel", "name": "Car Wash", "url": "https://tabi/#/site/GlobalServices/views/CarWash/Summary?:iid=3" },
+            { "pinned": false, "domain": "Transportation", "region": "Israel", "name": "Gas Consumption Summary", "url": "https://tabi/#/site/GlobalServices/views/GasConsumptionSummary/GasConsumptionSummary?:iid=4" },
+            { "pinned": false, "domain": "Transportation", "region": "Israel", "name": "IL Shuttles", "url": "https://tabi/#/site/GlobalServices/views/ILShuttles/ShuttlesSummary?:iid=3" },
+            { "pinned": false, "domain": "Transportation", "region": "Israel", "name": "Invoices", "url": "https://tabi/#/site/GlobalServices/views/Invoices/PaymentDelaySLA?:iid=10" },
+            { "pinned": false, "domain": "Transportation", "region": "Israel", "name": "KML Consumption", "url": "https://tabi/#/site/GlobalServices/views/KMLConsumption/KMLConsumption?:iid=8" },
+            { "pinned": false, "domain": "Transportation", "region": "Israel", "name": "Parking Area Summary", "url": "https://tabi/#/site/GlobalServices/views/ParkingAreaSummary_16987440988720/ParkingAreaSummary?:iid=11" },
+            { "pinned": false, "domain": "Transportation", "region": "Israel", "name": "Pledged", "url": "https://tabi/#/site/GlobalServices/views/Pleged/PledgeStatusSummary?:iid=11" },
+            { "pinned": false, "domain": "Transportation", "region": "India", "name": "Routematic Analysis", "url": "https://tabi/#/site/GlobalServices/views/RoutematicAnalysis_17365048521050/RoutematicAnalysis?:iid=5" },
+            { "pinned": false, "domain": "Transportation", "region": "Israel", "name": "Transportation Budget", "url": "https://tabi/#/site/GlobalServices/views/TransportationBudget/TransportationBudget?:iid=4" },
+            { "pinned": false, "domain": "Transportation", "region": "Israel", "name": "Tyre Analysis", "url": "https://tabi/#/site/GlobalServices/views/TyreAnalysis/TyreAnalysis?:iid=9" },
+            { "pinned": false, "domain": "Culinary", "region": "India", "name": "DigiCafe Dashboard", "url": "https://tabi/#/site/GlobalServices/views/DIgiCafeDashboard/DigiCafeDashboard?:iid=3" },
+            { "pinned": false, "domain": "Culinary", "region": "India", "name": "INDIA Cafe Survey Analysis", "url": "https://tabi/#/site/GlobalServices/views/INDIACafeSurveyAnalysis/INDIACafeSurveyAnalysis?:iid=4" },
+            { "pinned": false, "domain": "Culinary", "region": "Israel", "name": "CIBUS", "url": "https://tabi/#/site/GlobalServices/views/CIBUSDashboard/CIBUS?:iid=1" },
+            { "pinned": false, "domain": "Culinary", "region": "Israel", "name": "Coffee Machines", "url": "https://tabi/#/site/GlobalServices/views/CoffeeMachinesDataLake/MainDash?:iid=6" },
+            { "pinned": false, "domain": "Culinary", "region": "Israel", "name": "Prediction Quantity Analysis - Amdocs Park", "url": "https://tabi/#/site/GlobalServices/views/PredictionQuantityAnalysis-AmdocsPark/AmdocsParkWeeklyPredictionQuantityAnalysis?:iid=7" },
+            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "AMEX_BCD", "url": "https://tabi/#/site/GlobalServices/views/AMEX_BCD/Summary" },
+            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "Business Travel Daily Reports", "url": "https://tabi/#/site/GlobalServices/views/BusinessTravelDailyReports/BusinessTravelDailyReports" },
+            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "Business Trips Monitor", "url": "https://tabi/#/site/GlobalServices/views/BusinessTripsMonitor/SummaryPlannedTrips?:iid=12" },
+            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "Changes", "url": "https://tabi/#/site/GlobalServices/views/Changes/ChangesSummary?:iid=6" },
+            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "Employee Travel Details", "url": "https://tabi/#/site/GlobalServices/views/EmployeeTravelDetails/EmployeeTravelDetails?:iid=5" },
+            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "Group Trip to Same Direction", "url": "https://tabi/#/site/GlobalServices/views/GroupTriptoSameDirection/GroupTriptoSameDirection?:iid=5" },
+            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "GS Travel for Monthly deck", "url": "https://tabi/#/site/GlobalServices/views/GSTravelforMonthlydeck/GSTravel?:iid=7" },
+            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "High Cost Trips", "url": "https://tabi/#/site/GlobalServices/views/HighCostTrips/HighCostTrips?:iid=6" },
+            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "ISRAEL Employees Travel Details", "url": "https://tabi/#/site/GlobalServices/views/ISRAELEmployeesTravelDetails/ISRAELEmployeesTravelDetails?:iid=6" },
+            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "Israeli Reservists Traveling Details", "url": "https://tabi/#/site/GlobalServices/views/IsraeliReservistsTravelingDetails/IsraeliReservistsTravelingDetails?:iid=10" },
+            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "OPEX Summary", "url": "https://tabi/#/site/GlobalServices/views/OPEXSummary/OPEXSummary" },
+            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "TIR Dashboard", "url": "https://tabi/#/site/GlobalServices/views/TIRDashboard/TIRDashboard?:iid=9" },
+            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "Travel KPI`s", "url": "https://tabi/#/site/GlobalServices/views/TravelKPIs/Main?:iid=13" },
+            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "Travel Warning Dashboard", "url": "https://tabi/#/site/GlobalServices/views/TravelWarningDashboard/TravellingFromIsrael?:iid=12" },
+            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "Traveller Details to Mexico | Brazil | SouthAfrica", "url": "https://tabi/#/site/GlobalServices/views/TravellerDetailstoMexicoBrazilSouthAfrica/TravellerDetailstoMexicoBrazilSouthAfrica?:iid=4" }
+        ];
 
-        // --- 2. LOGIC TO RENDER CARDS ---
+        // --- ELEMENTS ---
         const grid = document.getElementById('gridContainer');
         const domainSelect = document.getElementById('domainSelect');
         const regionSelect = document.getElementById('regionSelect');
         const searchInput = document.getElementById('searchInput');
         const countDisplay = document.getElementById('countDisplay');
+        const viewModeText = document.getElementById('viewModeText');
 
-        // Platform detection for icons
+        // --- RENDER FUNCTION ---
         function getIconData(item) {
             const lowerUrl = item.url.toLowerCase();
-            
-            if (lowerUrl.includes('powerbi')) {
-                return { icon: '<i class="fas fa-chart-bar"></i>', class: 'icon-powerbi' };
-            }
-            if (lowerUrl.includes('tabi') || lowerUrl.includes('tableau')) {
-                return { icon: '<i class="fas fa-chart-pie"></i>', class: 'icon-tableau' };
-            }
-            if (lowerUrl.includes('service-now') || lowerUrl.includes('snow')) {
-                return { icon: '<i class="fas fa-server"></i>', class: 'icon-snow' };
-            }
-            // Default icon
+            if (lowerUrl.includes('powerbi')) return { icon: '<i class="fas fa-chart-bar"></i>', class: 'icon-powerbi' };
+            if (lowerUrl.includes('tabi') || lowerUrl.includes('tableau')) return { icon: '<i class="fas fa-chart-pie"></i>', class: 'icon-tableau' };
+            if (lowerUrl.includes('service-now') || lowerUrl.includes('snow')) return { icon: '<i class="fas fa-server"></i>', class: 'icon-snow' };
             return { icon: '<i class="fas fa-external-link-alt"></i>', class: '' };
         }
 
-        function renderCards(data) {
+        function renderCards(data, isFiltered) {
             grid.innerHTML = '';
             
             data.forEach(item => {
                 const iconData = getIconData(item);
-                
+                const pinnedBadge = item.pinned ? '<div class="pinned-badge"><i class="fas fa-thumbtack"></i></div>' : '';
+
                 const card = document.createElement('a');
                 card.className = 'card';
                 card.href = item.url;
-                card.target = "_blank"; // Open in new tab
-                
-                // Add title attribute for hover tooltip in case text is cut off
+                card.target = "_blank";
                 card.title = item.name;
 
                 card.innerHTML = `
+                    ${pinnedBadge}
                     <div class="card-top">
-                        <div class="card-icon ${iconData.class}">
-                            ${iconData.icon}
-                        </div>
+                        <div class="card-icon ${iconData.class}">${iconData.icon}</div>
                         <span class="domain-tag">${item.domain}</span>
                     </div>
                     <div class="card-title">${item.name}</div>
@@ -738,48 +326,52 @@
                 grid.appendChild(card);
             });
             countDisplay.innerText = data.length;
+            viewModeText.innerText = isFiltered ? "Results" : "Pinned / Default";
         }
 
-        // --- 3. FILTER LOGIC ---
+        // --- FILTER LOGIC ---
         function filterDashboards() {
             const domainVal = domainSelect.value;
             const regionVal = regionSelect.value;
             const searchVal = searchInput.value.toLowerCase();
 
-            const filtered = dashboardData.filter(item => {
-                const matchDomain = domainVal === 'All' || item.domain === domainVal;
-                const matchRegion = regionVal === 'All' || item.region === regionVal;
-                // Search in both Name and Domain for better UX
-                const matchSearch = item.name.toLowerCase().includes(searchVal) || 
-                                    item.domain.toLowerCase().includes(searchVal);
-                return matchDomain && matchRegion && matchSearch;
-            });
+            // Check if filters are effectively "empty"
+            const isDefaultState = (domainVal === 'All' && regionVal === 'All' && searchVal === '');
 
-            renderCards(filtered);
+            if (isDefaultState) {
+                // DEFAULT VIEW: Show only pinned items
+                const pinnedItems = dashboardData.filter(d => d.pinned);
+                renderCards(pinnedItems, false);
+            } else {
+                // FILTER VIEW: Search entire database
+                const filtered = dashboardData.filter(item => {
+                    const matchDomain = domainVal === 'All' || item.domain === domainVal;
+                    const matchRegion = regionVal === 'All' || item.region === regionVal;
+                    const matchSearch = item.name.toLowerCase().includes(searchVal) || 
+                                        item.domain.toLowerCase().includes(searchVal);
+                    return matchDomain && matchRegion && matchSearch;
+                });
+                renderCards(filtered, true);
+            }
         }
 
-        // --- 4. INIT ---
+        // --- INIT ---
         function init() {
-            // Populate Domain Dropdown (Sorted)
+            // Populate Dropdowns
             const domains = [...new Set(dashboardData.map(d => d.domain))].sort();
             domains.forEach(d => {
                 const opt = document.createElement('option');
-                opt.value = d;
-                opt.innerText = d;
-                domainSelect.appendChild(opt);
+                opt.value = d; opt.innerText = d; domainSelect.appendChild(opt);
             });
 
-            // Populate Region Dropdown (Sorted)
             const regions = [...new Set(dashboardData.map(d => d.region))].sort();
             regions.forEach(r => {
                 const opt = document.createElement('option');
-                opt.value = r;
-                opt.innerText = r;
-                regionSelect.appendChild(opt);
+                opt.value = r; opt.innerText = r; regionSelect.appendChild(opt);
             });
 
-            // Initial Render
-            renderCards(dashboardData);
+            // Initial Load (Default View)
+            filterDashboards();
         }
 
         init();
