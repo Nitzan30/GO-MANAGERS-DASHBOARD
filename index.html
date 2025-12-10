@@ -35,20 +35,19 @@
             height: 100vh;
             overflow: hidden;
             
-            /* --- THE NEW BACKGROUND --- */
-            /* Deep Navy base with Brand Color Glows */
+            /* --- BACKGROUND --- */
             background-color: #0f172a;
             background-image: 
-                radial-gradient(circle at 90% 10%, rgba(236, 0, 140, 0.25) 0%, transparent 40%), /* Magenta Glow Top Right */
-                radial-gradient(circle at 10% 90%, rgba(253, 181, 21, 0.15) 0%, transparent 40%); /* Yellow Glow Bottom Left */
+                radial-gradient(circle at 90% 10%, rgba(236, 0, 140, 0.25) 0%, transparent 40%), /* Magenta Glow */
+                radial-gradient(circle at 10% 90%, rgba(253, 181, 21, 0.15) 0%, transparent 40%); /* Yellow Glow */
             background-repeat: no-repeat;
             background-attachment: fixed;
         }
 
-        /* Sidebar with Blur Effect */
+        /* Sidebar */
         .sidebar {
             width: 280px;
-            background: rgba(15, 23, 42, 0.85); /* Dark semi-transparent */
+            background: rgba(15, 23, 42, 0.85); 
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             padding: 2rem;
@@ -79,6 +78,7 @@
             font-weight: 600;
         }
 
+        /* --- INPUTS & SELECTS FIX --- */
         select, input {
             width: 100%;
             padding: 12px;
@@ -91,9 +91,17 @@
             font-size: 0.9rem;
             transition: all 0.2s;
         }
+        
         select:focus, input:focus { 
             border-color: var(--brand-magenta); 
             background: rgba(255,255,255,0.1);
+        }
+
+        /* THE FIX: Force dropdown options to be dark so white text is visible */
+        option {
+            background-color: #0f172a; /* Dark Navy Background */
+            color: white;
+            padding: 10px;
         }
 
         /* Main Content */
@@ -125,7 +133,7 @@
             padding-bottom: 3rem;
         }
 
-        /* Cards with Glass Effect */
+        /* Cards */
         .card {
             background: var(--glass-bg);
             backdrop-filter: blur(8px);
@@ -147,7 +155,7 @@
             transform: translateY(-5px);
             background: var(--card-hover);
             border-color: var(--brand-magenta);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.3), 0 0 15px rgba(236, 0, 140, 0.2); /* Magenta Glow */
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3), 0 0 15px rgba(236, 0, 140, 0.2);
         }
 
         .card-top { display: flex; justify-content: space-between; margin-bottom: 1rem; }
@@ -167,7 +175,7 @@
         .domain-tag {
             font-size: 0.7rem; padding: 4px 10px; border-radius: 20px;
             background: rgba(236, 0, 140, 0.2); 
-            color: #ff8cd0; /* Lighter magenta for text legibility */
+            color: #ff8cd0;
             font-weight: 600; white-space: nowrap; max-width: 120px;
             overflow: hidden; text-overflow: ellipsis;
             border: 1px solid rgba(236, 0, 140, 0.3);
@@ -176,7 +184,7 @@
         .card-title { font-size: 1.1rem; font-weight: 600; margin-bottom: auto; padding-bottom: 1rem; }
         .card-meta { font-size: 0.85rem; color: var(--text-muted); display: flex; align-items: center; gap: 8px; border-top: 1px solid var(--glass-border); padding-top: 0.75rem; }
 
-        /* Pinned Badge (Gold) */
+        /* Pinned Badge */
         .pinned-badge {
             position: absolute; top: -10px; right: -10px;
             background: var(--brand-gold); color: #0f172a;
