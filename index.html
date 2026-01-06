@@ -1,432 +1,979 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Manager's Cockpit</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/inter-ui/3.19.3/inter.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/inter-ui/3.19.3/inter.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
 
     <style>
-        /* --- BRAND CONFIGURATION --- */
-        :root {
-            /* Text */
-            --text-main: #ffffff;
-            --text-muted: #cbd5e1;
-            
-            /* The Brand Palette you provided */
-            --brand-magenta: #ec008c;
-            --brand-yellow: #fdb515;
-            --brand-coral: #f2665f;
-            --brand-gold: #ffbf3f;
-            --brand-cream: #f2c75c;
-            
-            /* Glassmorphism Variables */
-            --glass-bg: rgba(30, 41, 59, 0.7); /* Semi-transparent dark blue */
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --card-hover: rgba(51, 65, 85, 0.9);
-        }
+      /* --- BRAND CONFIGURATION --- */
+      :root {
+        /* Text */
+        --text-main: #ffffff;
+        --text-muted: #cbd5e1;
 
-        body {
-            font-family: 'Inter', sans-serif;
-            color: var(--text-main);
-            margin: 0;
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
-            
-            /* --- BACKGROUND --- */
-            background-color: #0f172a;
-            background-image: 
-                radial-gradient(circle at 90% 10%, rgba(236, 0, 140, 0.25) 0%, transparent 40%), /* Magenta Glow */
-                radial-gradient(circle at 10% 90%, rgba(253, 181, 21, 0.15) 0%, transparent 40%); /* Yellow Glow */
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-        }
+        /* The Brand Palette you provided */
+        --brand-magenta: #ec008c;
+        --brand-yellow: #fdb515;
+        --brand-coral: #f2665f;
+        --brand-gold: #ffbf3f;
+        --brand-cream: #f2c75c;
 
-        /* Sidebar */
-        .sidebar {
-            width: 280px;
-            background: rgba(15, 23, 42, 0.85); 
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            padding: 2rem;
-            display: flex;
-            flex-direction: column;
-            border-right: 1px solid var(--glass-border);
-            flex-shrink: 0;
-            z-index: 10;
-        }
+        /* Glassmorphism Variables */
+        --glass-bg: rgba(30, 41, 59, 0.7); /* Semi-transparent dark blue */
+        --glass-border: rgba(255, 255, 255, 0.1);
+        --card-hover: rgba(51, 65, 85, 0.9);
+      }
 
-        .logo-area {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 2rem;
-            color: var(--text-main);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+      body {
+        font-family: "Inter", sans-serif;
+        color: var(--text-main);
+        margin: 0;
+        display: flex;
+        height: 100vh;
+        overflow: hidden;
 
-        .filter-group { margin-bottom: 1.5rem; }
-        .filter-label {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-muted);
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-        }
+        /* --- BACKGROUND --- */
+        background-color: #0f172a;
+        background-image: radial-gradient(
+            circle at 90% 10%,
+            rgba(236, 0, 140, 0.25) 0%,
+            transparent 40%
+          ),
+          /* Magenta Glow */
+            radial-gradient(
+              circle at 10% 90%,
+              rgba(253, 181, 21, 0.15) 0%,
+              transparent 40%
+            ); /* Yellow Glow */
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+      }
 
-        /* --- INPUTS & SELECTS FIX --- */
-        select, input {
-            width: 100%;
-            padding: 12px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--glass-border);
-            color: white;
-            border-radius: 8px;
-            outline: none;
-            box-sizing: border-box; 
-            font-size: 0.9rem;
-            transition: all 0.2s;
-        }
-        
-        select:focus, input:focus { 
-            border-color: var(--brand-magenta); 
-            background: rgba(255,255,255,0.1);
-        }
+      /* Sidebar */
+      .sidebar {
+        width: 280px;
+        background: rgba(15, 23, 42, 0.85);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        border-right: 1px solid var(--glass-border);
+        flex-shrink: 0;
+        z-index: 10;
+      }
 
-        /* FIX: Force dropdown options to be dark so white text is visible */
-        option {
-            background-color: #0f172a;
-            color: white;
-            padding: 10px;
-        }
+      .logo-area {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 2rem;
+        color: var(--text-main);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
 
-        /* RESET BUTTON STYLE */
-        .reset-btn {
-            width: 100%;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px dashed var(--glass-border);
-            color: var(--text-muted);
-            border-radius: 8px;
-            cursor: pointer;
-            font-family: inherit;
-            font-size: 0.85rem;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        
-        .reset-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border-color: var(--brand-magenta);
-        }
+      .filter-group {
+        margin-bottom: 1.5rem;
+      }
+      .filter-label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--text-muted);
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+      }
 
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            padding: 2rem 3rem;
-            overflow-y: auto;
-            position: relative;
-            z-index: 1;
-            display: flex;
-            flex-direction: column;
-        }
+      /* --- INPUTS & SELECTS FIX --- */
+      select,
+      input {
+        width: 100%;
+        padding: 12px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--glass-border);
+        color: white;
+        border-radius: 8px;
+        outline: none;
+        box-sizing: border-box;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+      }
 
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--glass-border);
-        }
+      select:focus,
+      input:focus {
+        border-color: var(--brand-magenta);
+        background: rgba(255, 255, 255, 0.1);
+      }
 
-        .welcome-text h1 { margin: 0; font-size: 2rem; font-weight: 600; text-shadow: 0 2px 4px rgba(0,0,0,0.3); }
-        .welcome-text p { margin: 5px 0 0; color: var(--text-muted); }
+      /* FIX: Force dropdown options to be dark so white text is visible */
+      option {
+        background-color: #0f172a;
+        color: white;
+        padding: 10px;
+      }
 
-        /* Grid */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.5rem;
-            padding-bottom: 3rem;
-        }
+      /* RESET BUTTON STYLE */
+      .reset-btn {
+        width: 100%;
+        padding: 10px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px dashed var(--glass-border);
+        color: var(--text-muted);
+        border-radius: 8px;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: 0.85rem;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
 
-        /* Cards */
-        .card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
-            padding: 1.5rem;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            color: inherit;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            min-height: 160px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        
-        .card:hover {
-            transform: translateY(-5px);
-            background: var(--card-hover);
-            border-color: var(--brand-magenta);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.3), 0 0 15px rgba(236, 0, 140, 0.2);
-        }
+      .reset-btn:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        border-color: var(--brand-magenta);
+      }
 
-        .card-top { display: flex; justify-content: space-between; margin-bottom: 1rem; }
-        
-        .card-icon {
-            width: 44px; height: 44px; border-radius: 10px;
-            background: rgba(255,255,255,0.08);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.4rem;
-        }
+      /* Main Content */
+      .main-content {
+        flex: 1;
+        padding: 2rem 3rem;
+        overflow-y: auto;
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+      }
 
-        /* --- BRANDED ICONS --- */
-        .icon-powerbi { color: var(--brand-yellow); background: rgba(253, 181, 21, 0.15); }
-        .icon-tableau { color: var(--brand-coral); background: rgba(242, 102, 95, 0.15); }
-        .icon-snow { color: var(--brand-cream); background: rgba(242, 199, 92, 0.15); } 
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--glass-border);
+      }
 
-        .domain-tag {
-            font-size: 0.7rem; padding: 4px 10px; border-radius: 20px;
-            background: rgba(236, 0, 140, 0.2); 
-            color: #ff8cd0;
-            font-weight: 600; white-space: nowrap; max-width: 120px;
-            overflow: hidden; text-overflow: ellipsis;
-            border: 1px solid rgba(236, 0, 140, 0.3);
-        }
+      .welcome-text h1 {
+        margin: 0;
+        font-size: 2rem;
+        font-weight: 600;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+      .welcome-text p {
+        margin: 5px 0 0;
+        color: var(--text-muted);
+      }
 
-        .card-title { font-size: 1.1rem; font-weight: 600; margin-bottom: auto; padding-bottom: 1rem; }
-        .card-meta { font-size: 0.85rem; color: var(--text-muted); display: flex; align-items: center; gap: 8px; border-top: 1px solid var(--glass-border); padding-top: 0.75rem; }
+      /* Grid */
+      .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.5rem;
+        padding-bottom: 3rem;
+      }
 
-        /* Pinned Badge */
-        .pinned-badge {
-            position: absolute; top: -10px; right: -10px;
-            background: var(--brand-gold); color: #0f172a;
-            width: 24px; height: 24px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 0.7rem; box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-            font-weight: bold;
-            z-index: 2;
-        }
+      /* Cards */
+      .card {
+        background: var(--glass-bg);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 1px solid var(--glass-border);
+        border-radius: 12px;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        color: inherit;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        min-height: 160px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
 
-        /* --- FOOTER STYLING --- */
-        .footer {
-            margin-top: auto; /* Pushes to bottom */
-            padding-top: 2rem;
-            padding-bottom: 1rem;
-            border-top: 1px solid var(--glass-border);
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            text-align: center;
-            line-height: 1.8;
-            letter-spacing: 0.3px;
-        }
+      .card:hover {
+        transform: translateY(-5px);
+        background: var(--card-hover);
+        border-color: var(--brand-magenta);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3),
+          0 0 15px rgba(236, 0, 140, 0.2);
+      }
 
-        .footer-link {
-            color: var(--brand-magenta);
-            text-decoration: none;
-            font-weight: 700;
-            margin: 0 5px;
-            transition: all 0.2s;
-        }
+      .card-top {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+      }
 
-        .footer-link:hover {
-            text-decoration: underline;
-            color: var(--brand-gold);
-            text-shadow: 0 0 8px rgba(255, 191, 63, 0.5);
-        }
+      .card-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.08);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+      }
 
-        .separator {
-            margin: 0 8px;
-            color: var(--glass-border);
-        }
+      /* --- BRANDED ICONS --- */
+      .icon-powerbi {
+        color: var(--brand-yellow);
+        background: rgba(253, 181, 21, 0.15);
+      }
+      .icon-tableau {
+        color: var(--brand-coral);
+        background: rgba(242, 102, 95, 0.15);
+      }
+      .icon-snow {
+        color: var(--brand-cream);
+        background: rgba(242, 199, 92, 0.15);
+      }
 
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--brand-magenta); }
+      .domain-tag {
+        font-size: 0.7rem;
+        padding: 4px 10px;
+        border-radius: 20px;
+        background: rgba(236, 0, 140, 0.2);
+        color: #ff8cd0;
+        font-weight: 600;
+        white-space: nowrap;
+        max-width: 120px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        border: 1px solid rgba(236, 0, 140, 0.3);
+      }
 
+      .card-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: auto;
+        padding-bottom: 1rem;
+      }
+      .card-meta {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        border-top: 1px solid var(--glass-border);
+        padding-top: 0.75rem;
+      }
+
+      /* Pinned Badge */
+      .pinned-badge {
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        background: var(--brand-gold);
+        color: #0f172a;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        font-weight: bold;
+        z-index: 2;
+      }
+
+      /* --- FOOTER STYLING --- */
+      .footer {
+        margin-top: auto; /* Pushes to bottom */
+        padding-top: 2rem;
+        padding-bottom: 1rem;
+        border-top: 1px solid var(--glass-border);
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        text-align: center;
+        line-height: 1.8;
+        letter-spacing: 0.3px;
+      }
+
+      .footer-link {
+        color: var(--brand-magenta);
+        text-decoration: none;
+        font-weight: 700;
+        margin: 0 5px;
+        transition: all 0.2s;
+      }
+
+      .footer-link:hover {
+        text-decoration: underline;
+        color: var(--brand-gold);
+        text-shadow: 0 0 8px rgba(255, 191, 63, 0.5);
+      }
+
+      .separator {
+        margin: 0 8px;
+        color: var(--glass-border);
+      }
+
+      /* Scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--brand-magenta);
+      }
     </style>
-</head>
-<body>
-
+  </head>
+  <body>
     <div class="sidebar">
-        <div class="logo-area">
-            <i class="fas fa-chart-network" style="color: var(--brand-magenta);"></i>
-            <span>Cockpit</span>
-        </div>
+      <div class="logo-area">
+        <i class="fas fa-chart-network" style="color: var(--brand-magenta)"></i>
+        <span>Cockpit</span>
+      </div>
 
-        <div class="filter-group">
-            <div class="filter-label">Search</div>
-            <input type="text" id="searchInput" placeholder="Find dashboard..." onkeyup="filterDashboards()">
-        </div>
+      <div class="filter-group">
+        <div class="filter-label">Search</div>
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Find dashboard..."
+          onkeyup="filterDashboards()"
+        />
+      </div>
 
-        <div class="filter-group">
-            <div class="filter-label">Domain</div>
-            <select id="domainSelect" onchange="filterDashboards()">
-                <option value="All">All Domains</option>
-            </select>
-        </div>
+      <div class="filter-group">
+        <div class="filter-label">Domain</div>
+        <select id="domainSelect" onchange="filterDashboards()">
+          <option value="All">All Domains</option>
+        </select>
+      </div>
 
-        <div class="filter-group">
-            <div class="filter-label">Region</div>
-            <select id="regionSelect" onchange="filterDashboards()">
-                <option value="All">All Regions</option>
-            </select>
-        </div>
+      <div class="filter-group">
+        <div class="filter-label">Region</div>
+        <select id="regionSelect" onchange="filterDashboards()">
+          <option value="All">All Regions</option>
+        </select>
+      </div>
 
-        <button class="reset-btn" onclick="resetView()">
-            <i class="fas fa-undo-alt"></i> Reset View
-        </button>
-        
-        <div style="margin-top: auto; font-size: 0.8rem; color: var(--text-muted);">
-            <i class="fas fa-info-circle"></i> Showing <span id="viewModeText">Pinned</span>
-        </div>
+      <button class="reset-btn" onclick="resetView()">
+        <i class="fas fa-undo-alt"></i> Reset View
+      </button>
+
+      <div
+        style="margin-top: auto; font-size: 0.8rem; color: var(--text-muted)"
+      >
+        <i class="fas fa-info-circle"></i> Showing
+        <span id="viewModeText">Pinned</span>
+      </div>
     </div>
 
     <div class="main-content">
-        <div class="header">
-            <div class="welcome-text">
-                <h1>Executive Overview</h1>
-                <p>Quick access to pinned items. Use filters for more.</p>
-            </div>
-            <div style="text-align: right; color: var(--text-muted);">
-                <span id="countDisplay" style="color: var(--brand-magenta); font-weight: bold;">0</span> items visible
-            </div>
+      <div class="header">
+        <div class="welcome-text">
+          <h1>Executive Overview</h1>
+          <p>Quick access to pinned items. Use filters for more.</p>
         </div>
-
-        <div class="dashboard-grid" id="gridContainer">
-            </div>
-
-        <div class="footer">
-            Built for managers · Simple · Fast · Self-serve · Last updated&nbsp;Dec 10, 2025&nbsp;·&nbsp;Created by Nitzan Raich
-            <br>
-            Need to open a ticket for GO BI team? 
-            <a href="https://amdocsprodmain.service-now.com/one_portal?id=aop_sc_cat_item&sys_id=9a8c607287eaced01c4431d73cbb3526&category_sys_id=6f38d211877286904f7762480cbb35ba" target="_blank" class="footer-link">CLICK HERE</a>
-            <span class="separator">|</span>
-            <a href="mailto:GlobalOperationsBI@amdocs.com" class="footer-link">EMAIL US</a>
+        <div style="text-align: right; color: var(--text-muted)">
+          <span
+            id="countDisplay"
+            style="color: var(--brand-magenta); font-weight: bold"
+            >0</span
+          >
+          items visible
         </div>
+      </div>
+
+      <div class="dashboard-grid" id="gridContainer"></div>
+
+      <div class="footer">
+        Built for managers · Simple · Fast · Self-serve · Last updated&nbsp;Dec
+        10, 2025&nbsp;·&nbsp;Created by Nitzan Raich
+        <br />
+        Need to open a ticket for GO BI team?
+        <a
+          href="https://amdocsprodmain.service-now.com/one_portal?id=aop_sc_cat_item&sys_id=9a8c607287eaced01c4431d73cbb3526&category_sys_id=6f38d211877286904f7762480cbb35ba"
+          target="_blank"
+          class="footer-link"
+          >CLICK HERE</a
+        >
+        <span class="separator">|</span>
+        <a href="mailto:GlobalOperationsBI@amdocs.com" class="footer-link"
+          >EMAIL US</a
+        >
+      </div>
     </div>
 
     <script>
-        const dashboardData = [
-            { "pinned": true, "domain": "GO Ping", "region": "Global", "name": "GO Ping", "url": "https://app.powerbi.com/groups/me/reports/62c9e56a-563a-43a6-9cc2-cf2a67eb5e8f/4d46de5b5ee8d0c59671?ctid=c8eca3ca-1276-46d5-9d9d-a0f2a028920f&experience=power-bi" },
-            { "pinned": true, "domain": "Global Site Analysis", "region": "Global", "name": "Global Site Analysis", "url": "https://tabi/#/site/GlobalServices/views/GlobalSiteAnalysisv1/GlobalSiteAnalysis?:iid=1" },
-            { "pinned": true, "domain": "SNOW DASH", "region": "Global", "name": "SNOW DASH", "url": "https://amdocsprodmain.service-now.com/nav_to.do?uri=%2F$pa_dashboard.do%3Fsysparm_dashboard%3D0e6b3803db49e01492f4d8c2f396191a%26sysparm_tab%3D428b7c03db49e01492f4d8c2f39619a3%26sysparm_cancelable%3Dtrue%26sysparm_editable%3Dtrue%26sysparm_active_panel%3DquickLayoutSideContent" },
-            { "pinned": true, "domain": "FlexSeat", "region": "Global", "name": "FlexSeat report", "url": "https://app.powerbi.com/groups/me/apps/a9a45472-96d0-4062-84fb-30c1dcdf8dfd/reports/69daf43d-df81-4b53-a15e-9e49968f3134/ReportSectione749003ebae51abf2453?experience=power-bi" },
-            { "pinned": false, "domain": "Attendance", "region": "Israel", "name": "Amdocs Park Attendance", "url": "https://tabi/#/site/GlobalServices/views/AmdocsParkAttendanceDataLake/AmdocsParkAttendance?:iid=1" },
-            { "pinned": false, "domain": "Attendance", "region": "Israel", "name": "Attendance Evenings Stay & Exits", "url": "https://tabi/#/site/GlobalServices/views/AttendanceEveningsStayExits/AttendanceEveningsStay?:iid=1" },
-            { "pinned": false, "domain": "Attendance", "region": "Cyprus", "name": "Cyprus Attendance", "url": "https://tabi/#/site/GlobalServices/views/CyprusAttendance/CyprusAttendance?:iid=2" },
-            { "pinned": false, "domain": "Attendance", "region": "Israel", "name": "Israel Attendance", "url": "https://tabi/#/site/GlobalServices/views/IsraelAttendance/RegionalAttendance?:iid=2" },
-            { "pinned": false, "domain": "Attendance", "region": "Israel", "name": "Israel Attendance Overview", "url": "https://tabi/#/site/GlobalServices/views/IsraelAttendanceOverview/IsraelAttendanceOverview?:iid=4" },
-            { "pinned": false, "domain": "Attendance", "region": "Israel", "name": "More than 11 Hours Present in the Office", "url": "https://tabi/#/site/GlobalServices/views/Morethan11HoursPresentintheOffice/Morethan11HoursPresentintheOffice?:iid=3" },
-            { "pinned": false, "domain": "Attendance", "region": "Israel", "name": "Nazareth Attendance", "url": "https://tabi/#/site/GlobalServices/views/NazarethAttendance/NazarethAttendance?:iid=1" },
-            { "pinned": false, "domain": "Attendance", "region": "Israel", "name": "Shderot Attendance", "url": "https://tabi/#/site/GlobalServices/views/ShderotAttendance/ShderotAttendance?:iid=5" },
-            { "pinned": false, "domain": "Attendance", "region": "Global", "name": "Locations Employees Dashboard", "url": "https://tabi/#/site/GlobalServices/views/LocationsEmployeesDashboard_16795840394750/LocationsEmployeesDashboard" },
-            { "pinned": false, "domain": "Attendance", "region": "Israel", "name": "Live Attendance Dashboard", "url": "https://tabi/#/site/GlobalServices/views/LiveAttendanceDashboard/LiveIsraelAttendance" },
-            { "pinned": false, "domain": "Attendance", "region": "APAC", "name": "Live Attendance Dashboard", "url": "https://tabi/#/site/GlobalServices/views/LiveAttendanceDashboard/LivePhilippinesAttendance" },
-            { "pinned": false, "domain": "Attendance", "region": "N. America", "name": "Live Attendance Dashboard", "url": "https://tabi/#/site/GlobalServices/views/LiveAttendanceDashboard/LiveGuadalajaraCorporativoGaleriasAttendance" },
-            { "pinned": false, "domain": "Attendance", "region": "N. America", "name": "Flex Seat v/s Attendance Analysis", "url": "https://tabi/#/site/GlobalServices/views/FlexSeatvsAttendanceAnalysis/FlexSeatvsAttendanceAnalysis" },
-            { "pinned": false, "domain": "Attendance", "region": "India", "name": "India Live Attendance Summary", "url": "https://tabi/#/site/GlobalServices/views/IndiaLiveAttendanceSummary/IndiaLiveAttendanceSummary?:iid=2" },
-            { "pinned": false, "domain": "EHS, Security", "region": "Global", "name": "EHS Criticality Buildings Summary", "url": "https://tabi/#/site/GlobalServices/views/EHSCriticalityBuildingsSummary/EHSCriticalityBuildingsSummary" },
-            { "pinned": false, "domain": "EHS, Security", "region": "Israel", "name": "Security Expert Badges Dashboard", "url": "https://tabi/#/site/GlobalServices/views/SecurityExpertBadgesDashboard/SecurityExpertBadgesDashboard?:iid=1" },
-            { "pinned": false, "domain": "EHS, Security", "region": "Global", "name": "Security Readiness Buildings Summary", "url": "https://tabi/#/site/GlobalServices/views/SecurityReadinessBuildingsSummaryProd/SecurityReadinessBuildingsSummary?:iid=1" },
-            { "pinned": false, "domain": "EHS, Security", "region": "India", "name": "Pune Swipe Details", "url": "https://tabi/#/site/GlobalServices/views/PuneSwipeDetails/PuneSwipeDetails" },
-            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "Active Relocation", "url": "https://tabi/#/site/GlobalServices/views/ActiveRelocation/ActiveRelocation?:iid=1" },
-            { "pinned": true, "domain": "Travel & Immigration", "region": "Global", "name": "TIR MASTER DASHBOARD", "url": "https://tabi/#/site/GlobalServices/views/TIRDashboard/TIRDashboard?:iid=1" },
-            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "Global Relocation Spend", "url": "https://tabi/#/site/GlobalServices/views/GlobalRelocationSpend/GlobalRelocationSpend?:iid=1" },
-            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "Immigration Budget", "url": "https://tabi/#/site/GlobalServices/views/ImmigrationBudget/ImmigrationBudget?:iid=2" },
-            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "Immigration Calculator", "url": "https://tabi/#/site/GlobalServices/views/ImmigrationCalculator/ImmigrationCalculator?:iid=2" },
-            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "India & APAC Business VISA Dashboard", "url": "https://tabi/#/site/GlobalServices/views/IndiaAPACBusinessVISADashboard/IndiaAPACBusinessVISADashboard?:iid=1" },
-            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "Lumpsum vs Cargo Analysis", "url": "https://tabi/#/site/GlobalServices/views/LumpsumvsCargoAnalysis/LumpsumvsCargoAnalysis?:iid=2" },
-            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "Traffic Light", "url": "https://tabi/#/site/GlobalServices/views/TrafficLight/TrafficLight?:iid=2" },
-            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "Work Permit Process Steps KPIs", "url": "https://tabi/#/site/GlobalServices/views/WorkPermitProcessStepsKPIs/WorkPermitProcessStepsKPIs?:iid=3" },
-            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "All Plan Travel Details", "url": "https://tabi/#/site/GlobalServices/views/AllPlanTravelDetails/AllPlanTravelDetails?:iid=4" },
-            { "pinned": false, "domain": "Real Estate & Facilities", "region": "Israel", "name": "Amdocs Park Facility Tickets", "url": "https://tabi/#/site/GlobalServices/views/FacilitiesTicketsNew/FacilitiesTickets?:iid=5" },
-            { "pinned": false, "domain": "Real Estate & Facilities", "region": "Global", "name": "Building & Contract Details", "url": "https://tabi/#/site/GlobalServices/views/BuildingContractDetails/RealEstateSummary?:iid=6" },
-            { "pinned": false, "domain": "Real Estate & Facilities", "region": "Global", "name": "Facilities Tickets", "url": "https://tabi/#/site/GlobalServices/views/FacilitiesTickets/FacilitiesTickets_1?:iid=3" },
-            { "pinned": false, "domain": "Real Estate & Facilities", "region": "Global", "name": "Global Site Analysis", "url": "https://tabi/#/site/GlobalServices/views/GlobalSiteAnalysisv1/GlobalSiteAnalysis" },
-            { "pinned": false, "domain": "Real Estate & Facilities", "region": "Israel", "name": "Real Estate and Facilities Analysis IL", "url": "https://tabi/#/site/GlobalServices/views/RealEstateandFacilitiesAnalysisIL/MainILSummary?:iid=4" },
-            { "pinned": false, "domain": "Real Estate & Facilities", "region": "Israel", "name": "Space Management Dashboard", "url": "https://tabi/#/site/GlobalServices/views/SpaceManagementDashboard/SpaceManagementDashboard?:iid=7" },
-            { "pinned": false, "domain": "Transportation", "region": "Israel", "name": "Amdocs Fleet Monthly", "url": "https://tabi/#/site/GlobalServices/views/AmdocsFleetMonthly/TotalQuantities?:iid=9" },
-            { "pinned": false, "domain": "Transportation", "region": "Israel", "name": "Bubbles Service Summary", "url": "https://tabi/#/site/GlobalServices/views/BubblesServiceSummary/BubblesServiceSummary?:iid=8" },
-            { "pinned": false, "domain": "Transportation", "region": "Israel", "name": "Car Accidents Summary", "url": "https://tabi/#/site/GlobalServices/views/CarAccidentsSummary/AccidentsSummary?:iid=10" },
-            { "pinned": false, "domain": "Transportation", "region": "Israel", "name": "Car Damages Cost Analysis", "url": "https://tabi/#/site/GlobalServices/views/CarDamagesCostAnalysis/CarDamagesCostAnalysisLocationVendor?:iid=9" },
-            { "pinned": false, "domain": "Transportation", "region": "Israel", "name": "Car Wash", "url": "https://tabi/#/site/GlobalServices/views/CarWash/Summary?:iid=3" },
-            { "pinned": false, "domain": "Transportation", "region": "Israel", "name": "Gas Consumption Summary", "url": "https://tabi/#/site/GlobalServices/views/GasConsumptionSummary/GasConsumptionSummary?:iid=4" },
-            { "pinned": false, "domain": "Transportation", "region": "Israel", "name": "IL Shuttles", "url": "https://tabi/#/site/GlobalServices/views/ILShuttles/ShuttlesSummary?:iid=3" },
-            { "pinned": false, "domain": "Transportation", "region": "Israel", "name": "Invoices", "url": "https://tabi/#/site/GlobalServices/views/Invoices/PaymentDelaySLA?:iid=10" },
-            { "pinned": false, "domain": "Transportation", "region": "Israel", "name": "KML Consumption", "url": "https://tabi/#/site/GlobalServices/views/KMLConsumption/KMLConsumption?:iid=8" },
-            { "pinned": false, "domain": "Transportation", "region": "Israel", "name": "Parking Area Summary", "url": "https://tabi/#/site/GlobalServices/views/ParkingAreaSummary_16987440988720/ParkingAreaSummary?:iid=11" },
-            { "pinned": false, "domain": "Transportation", "region": "Israel", "name": "Pledged", "url": "https://tabi/#/site/GlobalServices/views/Pleged/PledgeStatusSummary?:iid=11" },
-            // { "pinned": false, "domain": "Transportation", "region": "India", "name": "Routematic Analysis", "url": "https://tabi/#/site/GlobalServices/views/RoutematicAnalysis_17365048521050/RoutematicAnalysis?:iid=5" },
-            { "pinned": false, "domain": "Transportation", "region": "Israel", "name": "Transportation Budget", "url": "https://tabi/#/site/GlobalServices/views/TransportationBudget/TransportationBudget?:iid=4" },
-            { "pinned": false, "domain": "Transportation", "region": "Israel", "name": "Tyre Analysis", "url": "https://tabi/#/site/GlobalServices/views/TyreAnalysis/TyreAnalysis?:iid=9" },
-            { "pinned": true, "domain": "Culinary", "region": "India", "name": "DigiCafe Dashboard", "url": "https://tabi/#/site/GlobalServices/views/DIgiCafeDashboard/DigiCafeDashboard?:iid=3" },
-            { "pinned": false, "domain": "Culinary", "region": "India", "name": "INDIA Cafe Survey Analysis", "url": "https://tabi/#/site/GlobalServices/views/INDIACafeSurveyAnalysis/INDIACafeSurveyAnalysis?:iid=4" },
-            { "pinned": true, "domain": "Culinary", "region": "Israel", "name": "CIBUS", "url": "https://tabi/#/site/GlobalServices/views/CIBUSDashboard/CIBUS?:iid=1" },
-            { "pinned": false, "domain": "Culinary", "region": "Israel", "name": "Coffee Machines", "url": "https://tabi/#/site/GlobalServices/views/CoffeeMachinesDataLake/MainDash?:iid=6" },
-            { "pinned": false, "domain": "Culinary", "region": "Israel", "name": "Prediction Quantity Analysis - Amdocs Park", "url": "https://tabi/#/site/GlobalServices/views/PredictionQuantityAnalysis-AmdocsPark/AmdocsParkWeeklyPredictionQuantityAnalysis?:iid=7" },
-            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "AMEX_BCD", "url": "https://tabi/#/site/GlobalServices/views/AMEX_BCD/Summary" },
-            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "Business Travel Daily Reports", "url": "https://tabi/#/site/GlobalServices/views/BusinessTravelDailyReports/BusinessTravelDailyReports" },
-            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "Business Trips Monitor", "url": "https://tabi/#/site/GlobalServices/views/BusinessTripsMonitor/SummaryPlannedTrips?:iid=12" },
-            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "Changes", "url": "https://tabi/#/site/GlobalServices/views/Changes/ChangesSummary?:iid=6" },
-            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "Employee Travel Details", "url": "https://tabi/#/site/GlobalServices/views/EmployeeTravelDetails/EmployeeTravelDetails?:iid=5" },
-            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "Group Trip to Same Direction", "url": "https://tabi/#/site/GlobalServices/views/GroupTriptoSameDirection/GroupTriptoSameDirection?:iid=5" },
-            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "GS Travel for Monthly deck", "url": "https://tabi/#/site/GlobalServices/views/GSTravelforMonthlydeck/GSTravel?:iid=7" },
-            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "High Cost Trips", "url": "https://tabi/#/site/GlobalServices/views/HighCostTrips/HighCostTrips?:iid=6" },
-            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "ISRAEL Employees Travel Details", "url": "https://tabi/#/site/GlobalServices/views/ISRAELEmployeesTravelDetails/ISRAELEmployeesTravelDetails?:iid=6" },
-            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "Israeli Reservists Traveling Details", "url": "https://tabi/#/site/GlobalServices/views/IsraeliReservistsTravelingDetails/IsraeliReservistsTravelingDetails?:iid=10" },
-            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "OPEX Summary", "url": "https://tabi/#/site/GlobalServices/views/OPEXSummary/OPEXSummary" },
-            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "TIR Dashboard", "url": "https://tabi/#/site/GlobalServices/views/TIRDashboard/TIRDashboard?:iid=9" },
-            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "Travel KPI`s", "url": "https://tabi/#/site/GlobalServices/views/TravelKPIs/Main?:iid=13" },
-            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "Travel Warning Dashboard", "url": "https://tabi/#/site/GlobalServices/views/TravelWarningDashboard/TravellingFromIsrael?:iid=12" },
-            { "pinned": true, "domain": "Global", "region": "Global", "name": "FY26 Focused projects", "url": "https://amdocscorp.monday.com/boards/1927278786/views/39625089" },
-            { "pinned": false, "domain": "Travel & Immigration", "region": "Global", "name": "Traveller Details to Mexico | Brazil | SouthAfrica", "url": "https://tabi/#/site/GlobalServices/views/TravellerDetailstoMexicoBrazilSouthAfrica/TravellerDetailstoMexicoBrazilSouthAfrica?:iid=4" }
-        ];
+      const dashboardData = [
+        {
+          pinned: true,
+          domain: "GO Ping",
+          region: "Global",
+          name: "GO Ping",
+          url: "https://app.powerbi.com/groups/me/reports/62c9e56a-563a-43a6-9cc2-cf2a67eb5e8f/4d46de5b5ee8d0c59671?ctid=c8eca3ca-1276-46d5-9d9d-a0f2a028920f&experience=power-bi",
+        },
+        {
+          pinned: true,
+          domain: "Global Site Analysis",
+          region: "Global",
+          name: "Global Site Analysis",
+          url: "https://tabi/#/site/GlobalServices/views/GlobalSiteAnalysisv1/GlobalSiteAnalysis?:iid=1",
+        },
+        {
+          pinned: true,
+          domain: "SNOW DASH",
+          region: "Global",
+          name: "SNOW DASH",
+          url: "https://amdocsprodmain.service-now.com/nav_to.do?uri=%2F$pa_dashboard.do%3Fsysparm_dashboard%3D0e6b3803db49e01492f4d8c2f396191a%26sysparm_tab%3D428b7c03db49e01492f4d8c2f39619a3%26sysparm_cancelable%3Dtrue%26sysparm_editable%3Dtrue%26sysparm_active_panel%3DquickLayoutSideContent",
+        },
+        {
+          pinned: true,
+          domain: "FlexSeat",
+          region: "Global",
+          name: "FlexSeat report",
+          url: "https://app.powerbi.com/groups/me/apps/a9a45472-96d0-4062-84fb-30c1dcdf8dfd/reports/69daf43d-df81-4b53-a15e-9e49968f3134/ReportSectione749003ebae51abf2453?experience=power-bi",
+        },
+        {
+          pinned: true,
+          domain: "FlexSeat",
+          region: "Global",
+          name: "SiteLens360",
+          url: "https://app.powerbi.com/groups/me/apps/a9a45472-96d0-4062-84fb-30c1dcdf8dfd/reports/69daf43d-df81-4b53-a15e-9e49968f3134/ReportSectione749003ebae51abf2453?experience=power-bi",
+        },
+        {
+          pinned: false,
+          domain: "Attendance",
+          region: "Israel",
+          name: "Amdocs Park Attendance",
+          url: "https://tabi/#/site/GlobalServices/views/AmdocsParkAttendanceDataLake/AmdocsParkAttendance?:iid=1",
+        },
+        {
+          pinned: false,
+          domain: "Attendance",
+          region: "Israel",
+          name: "Attendance Evenings Stay & Exits",
+          url: "https://tabi/#/site/GlobalServices/views/AttendanceEveningsStayExits/AttendanceEveningsStay?:iid=1",
+        },
+        {
+          pinned: false,
+          domain: "Attendance",
+          region: "Cyprus",
+          name: "Cyprus Attendance",
+          url: "https://tabi/#/site/GlobalServices/views/CyprusAttendance/CyprusAttendance?:iid=2",
+        },
+        {
+          pinned: false,
+          domain: "Attendance",
+          region: "Israel",
+          name: "Israel Attendance",
+          url: "https://tabi/#/site/GlobalServices/views/IsraelAttendance/RegionalAttendance?:iid=2",
+        },
+        {
+          pinned: false,
+          domain: "Attendance",
+          region: "Israel",
+          name: "Israel Attendance Overview",
+          url: "https://tabi/#/site/GlobalServices/views/IsraelAttendanceOverview/IsraelAttendanceOverview?:iid=4",
+        },
+        {
+          pinned: false,
+          domain: "Attendance",
+          region: "Israel",
+          name: "More than 11 Hours Present in the Office",
+          url: "https://tabi/#/site/GlobalServices/views/Morethan11HoursPresentintheOffice/Morethan11HoursPresentintheOffice?:iid=3",
+        },
+        {
+          pinned: false,
+          domain: "Attendance",
+          region: "Israel",
+          name: "Nazareth Attendance",
+          url: "https://tabi/#/site/GlobalServices/views/NazarethAttendance/NazarethAttendance?:iid=1",
+        },
+        {
+          pinned: false,
+          domain: "Attendance",
+          region: "Israel",
+          name: "Shderot Attendance",
+          url: "https://tabi/#/site/GlobalServices/views/ShderotAttendance/ShderotAttendance?:iid=5",
+        },
+        {
+          pinned: false,
+          domain: "Attendance",
+          region: "Global",
+          name: "Locations Employees Dashboard",
+          url: "https://tabi/#/site/GlobalServices/views/LocationsEmployeesDashboard_16795840394750/LocationsEmployeesDashboard",
+        },
+        {
+          pinned: false,
+          domain: "Attendance",
+          region: "Israel",
+          name: "Live Attendance Dashboard",
+          url: "https://tabi/#/site/GlobalServices/views/LiveAttendanceDashboard/LiveIsraelAttendance",
+        },
+        {
+          pinned: false,
+          domain: "Attendance",
+          region: "APAC",
+          name: "Live Attendance Dashboard",
+          url: "https://tabi/#/site/GlobalServices/views/LiveAttendanceDashboard/LivePhilippinesAttendance",
+        },
+        {
+          pinned: false,
+          domain: "Attendance",
+          region: "N. America",
+          name: "Live Attendance Dashboard",
+          url: "https://tabi/#/site/GlobalServices/views/LiveAttendanceDashboard/LiveGuadalajaraCorporativoGaleriasAttendance",
+        },
+        {
+          pinned: false,
+          domain: "Attendance",
+          region: "N. America",
+          name: "Flex Seat v/s Attendance Analysis",
+          url: "https://tabi/#/site/GlobalServices/views/FlexSeatvsAttendanceAnalysis/FlexSeatvsAttendanceAnalysis",
+        },
+        {
+          pinned: false,
+          domain: "Attendance",
+          region: "India",
+          name: "India Live Attendance Summary",
+          url: "https://tabi/#/site/GlobalServices/views/IndiaLiveAttendanceSummary/IndiaLiveAttendanceSummary?:iid=2",
+        },
+        {
+          pinned: false,
+          domain: "EHS, Security",
+          region: "Global",
+          name: "EHS Criticality Buildings Summary",
+          url: "https://tabi/#/site/GlobalServices/views/EHSCriticalityBuildingsSummary/EHSCriticalityBuildingsSummary",
+        },
+        {
+          pinned: false,
+          domain: "EHS, Security",
+          region: "Israel",
+          name: "Security Expert Badges Dashboard",
+          url: "https://tabi/#/site/GlobalServices/views/SecurityExpertBadgesDashboard/SecurityExpertBadgesDashboard?:iid=1",
+        },
+        {
+          pinned: false,
+          domain: "EHS, Security",
+          region: "Global",
+          name: "Security Readiness Buildings Summary",
+          url: "https://tabi/#/site/GlobalServices/views/SecurityReadinessBuildingsSummaryProd/SecurityReadinessBuildingsSummary?:iid=1",
+        },
+        {
+          pinned: false,
+          domain: "EHS, Security",
+          region: "India",
+          name: "Pune Swipe Details",
+          url: "https://tabi/#/site/GlobalServices/views/PuneSwipeDetails/PuneSwipeDetails",
+        },
+        {
+          pinned: false,
+          domain: "Travel & Immigration",
+          region: "Global",
+          name: "Active Relocation",
+          url: "https://tabi/#/site/GlobalServices/views/ActiveRelocation/ActiveRelocation?:iid=1",
+        },
+        {
+          pinned: true,
+          domain: "Travel & Immigration",
+          region: "Global",
+          name: "TIR MASTER DASHBOARD",
+          url: "https://tabi/#/site/GlobalServices/views/TIRDashboard/TIRDashboard?:iid=1",
+        },
+        {
+          pinned: false,
+          domain: "Travel & Immigration",
+          region: "Global",
+          name: "Global Relocation Spend",
+          url: "https://tabi/#/site/GlobalServices/views/GlobalRelocationSpend/GlobalRelocationSpend?:iid=1",
+        },
+        {
+          pinned: false,
+          domain: "Travel & Immigration",
+          region: "Global",
+          name: "Immigration Budget",
+          url: "https://tabi/#/site/GlobalServices/views/ImmigrationBudget/ImmigrationBudget?:iid=2",
+        },
+        {
+          pinned: false,
+          domain: "Travel & Immigration",
+          region: "Global",
+          name: "Immigration Calculator",
+          url: "https://tabi/#/site/GlobalServices/views/ImmigrationCalculator/ImmigrationCalculator?:iid=2",
+        },
+        {
+          pinned: false,
+          domain: "Travel & Immigration",
+          region: "Global",
+          name: "India & APAC Business VISA Dashboard",
+          url: "https://tabi/#/site/GlobalServices/views/IndiaAPACBusinessVISADashboard/IndiaAPACBusinessVISADashboard?:iid=1",
+        },
+        {
+          pinned: false,
+          domain: "Travel & Immigration",
+          region: "Global",
+          name: "Lumpsum vs Cargo Analysis",
+          url: "https://tabi/#/site/GlobalServices/views/LumpsumvsCargoAnalysis/LumpsumvsCargoAnalysis?:iid=2",
+        },
+        {
+          pinned: false,
+          domain: "Travel & Immigration",
+          region: "Global",
+          name: "Traffic Light",
+          url: "https://tabi/#/site/GlobalServices/views/TrafficLight/TrafficLight?:iid=2",
+        },
+        {
+          pinned: false,
+          domain: "Travel & Immigration",
+          region: "Global",
+          name: "Work Permit Process Steps KPIs",
+          url: "https://tabi/#/site/GlobalServices/views/WorkPermitProcessStepsKPIs/WorkPermitProcessStepsKPIs?:iid=3",
+        },
+        {
+          pinned: false,
+          domain: "Travel & Immigration",
+          region: "Global",
+          name: "All Plan Travel Details",
+          url: "https://tabi/#/site/GlobalServices/views/AllPlanTravelDetails/AllPlanTravelDetails?:iid=4",
+        },
+        {
+          pinned: false,
+          domain: "Real Estate & Facilities",
+          region: "Israel",
+          name: "Amdocs Park Facility Tickets",
+          url: "https://tabi/#/site/GlobalServices/views/FacilitiesTicketsNew/FacilitiesTickets?:iid=5",
+        },
+        {
+          pinned: false,
+          domain: "Real Estate & Facilities",
+          region: "Global",
+          name: "Building & Contract Details",
+          url: "https://tabi/#/site/GlobalServices/views/BuildingContractDetails/RealEstateSummary?:iid=6",
+        },
+        {
+          pinned: false,
+          domain: "Real Estate & Facilities",
+          region: "Global",
+          name: "Facilities Tickets",
+          url: "https://tabi/#/site/GlobalServices/views/FacilitiesTickets/FacilitiesTickets_1?:iid=3",
+        },
+        {
+          pinned: false,
+          domain: "Real Estate & Facilities",
+          region: "Global",
+          name: "Global Site Analysis",
+          url: "https://tabi/#/site/GlobalServices/views/GlobalSiteAnalysisv1/GlobalSiteAnalysis",
+        },
+        {
+          pinned: false,
+          domain: "Real Estate & Facilities",
+          region: "Israel",
+          name: "Real Estate and Facilities Analysis IL",
+          url: "https://tabi/#/site/GlobalServices/views/RealEstateandFacilitiesAnalysisIL/MainILSummary?:iid=4",
+        },
+        {
+          pinned: false,
+          domain: "Real Estate & Facilities",
+          region: "Israel",
+          name: "Space Management Dashboard",
+          url: "https://tabi/#/site/GlobalServices/views/SpaceManagementDashboard/SpaceManagementDashboard?:iid=7",
+        },
+        {
+          pinned: false,
+          domain: "Transportation",
+          region: "Israel",
+          name: "Amdocs Fleet Monthly",
+          url: "https://tabi/#/site/GlobalServices/views/AmdocsFleetMonthly/TotalQuantities?:iid=9",
+        },
+        {
+          pinned: false,
+          domain: "Transportation",
+          region: "Israel",
+          name: "Bubbles Service Summary",
+          url: "https://tabi/#/site/GlobalServices/views/BubblesServiceSummary/BubblesServiceSummary?:iid=8",
+        },
+        {
+          pinned: false,
+          domain: "Transportation",
+          region: "Israel",
+          name: "Car Accidents Summary",
+          url: "https://tabi/#/site/GlobalServices/views/CarAccidentsSummary/AccidentsSummary?:iid=10",
+        },
+        {
+          pinned: false,
+          domain: "Transportation",
+          region: "Israel",
+          name: "Car Damages Cost Analysis",
+          url: "https://tabi/#/site/GlobalServices/views/CarDamagesCostAnalysis/CarDamagesCostAnalysisLocationVendor?:iid=9",
+        },
+        {
+          pinned: false,
+          domain: "Transportation",
+          region: "Israel",
+          name: "Car Wash",
+          url: "https://tabi/#/site/GlobalServices/views/CarWash/Summary?:iid=3",
+        },
+        {
+          pinned: false,
+          domain: "Transportation",
+          region: "Israel",
+          name: "Gas Consumption Summary",
+          url: "https://tabi/#/site/GlobalServices/views/GasConsumptionSummary/GasConsumptionSummary?:iid=4",
+        },
+        {
+          pinned: false,
+          domain: "Transportation",
+          region: "Israel",
+          name: "IL Shuttles",
+          url: "https://tabi/#/site/GlobalServices/views/ILShuttles/ShuttlesSummary?:iid=3",
+        },
+        {
+          pinned: false,
+          domain: "Transportation",
+          region: "Israel",
+          name: "Invoices",
+          url: "https://tabi/#/site/GlobalServices/views/Invoices/PaymentDelaySLA?:iid=10",
+        },
+        {
+          pinned: false,
+          domain: "Transportation",
+          region: "Israel",
+          name: "KML Consumption",
+          url: "https://tabi/#/site/GlobalServices/views/KMLConsumption/KMLConsumption?:iid=8",
+        },
+        {
+          pinned: false,
+          domain: "Transportation",
+          region: "Israel",
+          name: "Parking Area Summary",
+          url: "https://tabi/#/site/GlobalServices/views/ParkingAreaSummary_16987440988720/ParkingAreaSummary?:iid=11",
+        },
+        {
+          pinned: false,
+          domain: "Transportation",
+          region: "Israel",
+          name: "Pledged",
+          url: "https://tabi/#/site/GlobalServices/views/Pleged/PledgeStatusSummary?:iid=11",
+        },
+        // { "pinned": false, "domain": "Transportation", "region": "India", "name": "Routematic Analysis", "url": "https://tabi/#/site/GlobalServices/views/RoutematicAnalysis_17365048521050/RoutematicAnalysis?:iid=5" },
+        {
+          pinned: false,
+          domain: "Transportation",
+          region: "Israel",
+          name: "Transportation Budget",
+          url: "https://tabi/#/site/GlobalServices/views/TransportationBudget/TransportationBudget?:iid=4",
+        },
+        {
+          pinned: false,
+          domain: "Transportation",
+          region: "Israel",
+          name: "Tyre Analysis",
+          url: "https://tabi/#/site/GlobalServices/views/TyreAnalysis/TyreAnalysis?:iid=9",
+        },
+        {
+          pinned: true,
+          domain: "Culinary",
+          region: "India",
+          name: "DigiCafe Dashboard",
+          url: "https://tabi/#/site/GlobalServices/views/DIgiCafeDashboard/DigiCafeDashboard?:iid=3",
+        },
+        {
+          pinned: false,
+          domain: "Culinary",
+          region: "India",
+          name: "INDIA Cafe Survey Analysis",
+          url: "https://tabi/#/site/GlobalServices/views/INDIACafeSurveyAnalysis/INDIACafeSurveyAnalysis?:iid=4",
+        },
+        {
+          pinned: true,
+          domain: "Culinary",
+          region: "Israel",
+          name: "CIBUS",
+          url: "https://tabi/#/site/GlobalServices/views/CIBUSDashboard/CIBUS?:iid=1",
+        },
+        {
+          pinned: false,
+          domain: "Culinary",
+          region: "Israel",
+          name: "Coffee Machines",
+          url: "https://tabi/#/site/GlobalServices/views/CoffeeMachinesDataLake/MainDash?:iid=6",
+        },
+        {
+          pinned: false,
+          domain: "Culinary",
+          region: "Israel",
+          name: "Prediction Quantity Analysis - Amdocs Park",
+          url: "https://tabi/#/site/GlobalServices/views/PredictionQuantityAnalysis-AmdocsPark/AmdocsParkWeeklyPredictionQuantityAnalysis?:iid=7",
+        },
+        {
+          pinned: false,
+          domain: "Travel & Immigration",
+          region: "Global",
+          name: "AMEX_BCD",
+          url: "https://tabi/#/site/GlobalServices/views/AMEX_BCD/Summary",
+        },
+        {
+          pinned: false,
+          domain: "Travel & Immigration",
+          region: "Global",
+          name: "Business Travel Daily Reports",
+          url: "https://tabi/#/site/GlobalServices/views/BusinessTravelDailyReports/BusinessTravelDailyReports",
+        },
+        {
+          pinned: false,
+          domain: "Travel & Immigration",
+          region: "Global",
+          name: "Business Trips Monitor",
+          url: "https://tabi/#/site/GlobalServices/views/BusinessTripsMonitor/SummaryPlannedTrips?:iid=12",
+        },
+        {
+          pinned: false,
+          domain: "Travel & Immigration",
+          region: "Global",
+          name: "Changes",
+          url: "https://tabi/#/site/GlobalServices/views/Changes/ChangesSummary?:iid=6",
+        },
+        {
+          pinned: false,
+          domain: "Travel & Immigration",
+          region: "Global",
+          name: "Employee Travel Details",
+          url: "https://tabi/#/site/GlobalServices/views/EmployeeTravelDetails/EmployeeTravelDetails?:iid=5",
+        },
+        {
+          pinned: false,
+          domain: "Travel & Immigration",
+          region: "Global",
+          name: "Group Trip to Same Direction",
+          url: "https://tabi/#/site/GlobalServices/views/GroupTriptoSameDirection/GroupTriptoSameDirection?:iid=5",
+        },
+        {
+          pinned: false,
+          domain: "Travel & Immigration",
+          region: "Global",
+          name: "GS Travel for Monthly deck",
+          url: "https://tabi/#/site/GlobalServices/views/GSTravelforMonthlydeck/GSTravel?:iid=7",
+        },
+        {
+          pinned: false,
+          domain: "Travel & Immigration",
+          region: "Global",
+          name: "High Cost Trips",
+          url: "https://tabi/#/site/GlobalServices/views/HighCostTrips/HighCostTrips?:iid=6",
+        },
+        {
+          pinned: false,
+          domain: "Travel & Immigration",
+          region: "Global",
+          name: "ISRAEL Employees Travel Details",
+          url: "https://tabi/#/site/GlobalServices/views/ISRAELEmployeesTravelDetails/ISRAELEmployeesTravelDetails?:iid=6",
+        },
+        {
+          pinned: false,
+          domain: "Travel & Immigration",
+          region: "Global",
+          name: "Israeli Reservists Traveling Details",
+          url: "https://tabi/#/site/GlobalServices/views/IsraeliReservistsTravelingDetails/IsraeliReservistsTravelingDetails?:iid=10",
+        },
+        {
+          pinned: false,
+          domain: "Travel & Immigration",
+          region: "Global",
+          name: "OPEX Summary",
+          url: "https://tabi/#/site/GlobalServices/views/OPEXSummary/OPEXSummary",
+        },
+        {
+          pinned: false,
+          domain: "Travel & Immigration",
+          region: "Global",
+          name: "TIR Dashboard",
+          url: "https://tabi/#/site/GlobalServices/views/TIRDashboard/TIRDashboard?:iid=9",
+        },
+        {
+          pinned: false,
+          domain: "Travel & Immigration",
+          region: "Global",
+          name: "Travel KPI`s",
+          url: "https://tabi/#/site/GlobalServices/views/TravelKPIs/Main?:iid=13",
+        },
+        {
+          pinned: false,
+          domain: "Travel & Immigration",
+          region: "Global",
+          name: "Travel Warning Dashboard",
+          url: "https://tabi/#/site/GlobalServices/views/TravelWarningDashboard/TravellingFromIsrael?:iid=12",
+        },
+        {
+          pinned: true,
+          domain: "Global",
+          region: "Global",
+          name: "FY26 Focused projects",
+          url: "https://amdocscorp.monday.com/boards/1927278786/views/39625089",
+        },
+        {
+          pinned: false,
+          domain: "Travel & Immigration",
+          region: "Global",
+          name: "Traveller Details to Mexico | Brazil | SouthAfrica",
+          url: "https://tabi/#/site/GlobalServices/views/TravellerDetailstoMexicoBrazilSouthAfrica/TravellerDetailstoMexicoBrazilSouthAfrica?:iid=4",
+        },
+      ];
 
-        const grid = document.getElementById('gridContainer');
-        const domainSelect = document.getElementById('domainSelect');
-        const regionSelect = document.getElementById('regionSelect');
-        const searchInput = document.getElementById('searchInput');
-        const countDisplay = document.getElementById('countDisplay');
-        const viewModeText = document.getElementById('viewModeText');
+      const grid = document.getElementById("gridContainer");
+      const domainSelect = document.getElementById("domainSelect");
+      const regionSelect = document.getElementById("regionSelect");
+      const searchInput = document.getElementById("searchInput");
+      const countDisplay = document.getElementById("countDisplay");
+      const viewModeText = document.getElementById("viewModeText");
 
-        function getIconData(item) {
-            const lowerUrl = item.url.toLowerCase();
-            if (lowerUrl.includes('powerbi')) return { icon: '<i class="fas fa-chart-bar"></i>', class: 'icon-powerbi' };
-            if (lowerUrl.includes('tabi') || lowerUrl.includes('tableau')) return { icon: '<i class="fas fa-chart-pie"></i>', class: 'icon-tableau' };
-            if (lowerUrl.includes('service-now') || lowerUrl.includes('snow')) return { icon: '<i class="fas fa-server"></i>', class: 'icon-snow' };
-            return { icon: '<i class="fas fa-external-link-alt"></i>', class: '' };
-        }
+      function getIconData(item) {
+        const lowerUrl = item.url.toLowerCase();
+        if (lowerUrl.includes("powerbi"))
+          return {
+            icon: '<i class="fas fa-chart-bar"></i>',
+            class: "icon-powerbi",
+          };
+        if (lowerUrl.includes("tabi") || lowerUrl.includes("tableau"))
+          return {
+            icon: '<i class="fas fa-chart-pie"></i>',
+            class: "icon-tableau",
+          };
+        if (lowerUrl.includes("service-now") || lowerUrl.includes("snow"))
+          return { icon: '<i class="fas fa-server"></i>', class: "icon-snow" };
+        return { icon: '<i class="fas fa-external-link-alt"></i>', class: "" };
+      }
 
-        function renderCards(data, isFiltered) {
-            grid.innerHTML = '';
-            
-            data.forEach(item => {
-                const iconData = getIconData(item);
-                const pinnedBadge = item.pinned ? '<div class="pinned-badge"><i class="fas fa-thumbtack"></i></div>' : '';
+      function renderCards(data, isFiltered) {
+        grid.innerHTML = "";
 
-                const card = document.createElement('a');
-                card.className = 'card';
-                card.href = item.url;
-                card.target = "_blank";
-                card.title = item.name;
+        data.forEach((item) => {
+          const iconData = getIconData(item);
+          const pinnedBadge = item.pinned
+            ? '<div class="pinned-badge"><i class="fas fa-thumbtack"></i></div>'
+            : "";
 
-                card.innerHTML = `
+          const card = document.createElement("a");
+          card.className = "card";
+          card.href = item.url;
+          card.target = "_blank";
+          card.title = item.name;
+
+          card.innerHTML = `
                     ${pinnedBadge}
                     <div class="card-top">
                         <div class="card-icon ${iconData.class}">${iconData.icon}</div>
@@ -437,60 +984,67 @@
                         <i class="fas fa-globe-americas"></i> ${item.region}
                     </div>
                 `;
-                grid.appendChild(card);
-            });
-            countDisplay.innerText = data.length;
-            viewModeText.innerText = isFiltered ? "Results" : "Pinned / Default";
+          grid.appendChild(card);
+        });
+        countDisplay.innerText = data.length;
+        viewModeText.innerText = isFiltered ? "Results" : "Pinned / Default";
+      }
+
+      function filterDashboards() {
+        const domainVal = domainSelect.value;
+        const regionVal = regionSelect.value;
+        const searchVal = searchInput.value.toLowerCase();
+
+        const isDefaultState =
+          domainVal === "All" && regionVal === "All" && searchVal === "";
+
+        if (isDefaultState) {
+          const pinnedItems = dashboardData.filter((d) => d.pinned);
+          renderCards(pinnedItems, false);
+        } else {
+          const filtered = dashboardData.filter((item) => {
+            const matchDomain =
+              domainVal === "All" || item.domain === domainVal;
+            const matchRegion =
+              regionVal === "All" || item.region === regionVal;
+            const matchSearch =
+              item.name.toLowerCase().includes(searchVal) ||
+              item.domain.toLowerCase().includes(searchVal);
+            return matchDomain && matchRegion && matchSearch;
+          });
+          renderCards(filtered, true);
         }
+      }
 
-        function filterDashboards() {
-            const domainVal = domainSelect.value;
-            const regionVal = regionSelect.value;
-            const searchVal = searchInput.value.toLowerCase();
+      // --- NEW RESET VIEW FUNCTION ---
+      function resetView() {
+        document.getElementById("searchInput").value = "";
+        document.getElementById("domainSelect").value = "All";
+        document.getElementById("regionSelect").value = "All";
+        filterDashboards();
+      }
 
-            const isDefaultState = (domainVal === 'All' && regionVal === 'All' && searchVal === '');
+      function init() {
+        const domains = [...new Set(dashboardData.map((d) => d.domain))].sort();
+        domains.forEach((d) => {
+          const opt = document.createElement("option");
+          opt.value = d;
+          opt.innerText = d;
+          domainSelect.appendChild(opt);
+        });
 
-            if (isDefaultState) {
-                const pinnedItems = dashboardData.filter(d => d.pinned);
-                renderCards(pinnedItems, false);
-            } else {
-                const filtered = dashboardData.filter(item => {
-                    const matchDomain = domainVal === 'All' || item.domain === domainVal;
-                    const matchRegion = regionVal === 'All' || item.region === regionVal;
-                    const matchSearch = item.name.toLowerCase().includes(searchVal) || 
-                                        item.domain.toLowerCase().includes(searchVal);
-                    return matchDomain && matchRegion && matchSearch;
-                });
-                renderCards(filtered, true);
-            }
-        }
+        const regions = [...new Set(dashboardData.map((d) => d.region))].sort();
+        regions.forEach((r) => {
+          const opt = document.createElement("option");
+          opt.value = r;
+          opt.innerText = r;
+          regionSelect.appendChild(opt);
+        });
 
-        // --- NEW RESET VIEW FUNCTION ---
-        function resetView() {
-            document.getElementById('searchInput').value = '';
-            document.getElementById('domainSelect').value = 'All';
-            document.getElementById('regionSelect').value = 'All';
-            filterDashboards();
-        }
+        filterDashboards();
+      }
 
-        function init() {
-            const domains = [...new Set(dashboardData.map(d => d.domain))].sort();
-            domains.forEach(d => {
-                const opt = document.createElement('option');
-                opt.value = d; opt.innerText = d; domainSelect.appendChild(opt);
-            });
-
-            const regions = [...new Set(dashboardData.map(d => d.region))].sort();
-            regions.forEach(r => {
-                const opt = document.createElement('option');
-                opt.value = r; opt.innerText = r; regionSelect.appendChild(opt);
-            });
-
-            filterDashboards();
-        }
-
-        init();
-
+      init();
     </script>
-</body>
+  </body>
 </html>
